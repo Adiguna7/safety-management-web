@@ -1,0 +1,8 @@
+#mynetwork {
+    overflow-y: hidden !important;
+    width: 600px;
+    height: 400px;
+    background-image: url("/img/safetymodel.png");
+    background-size: contain;
+    background-repeat: no-repeat;    
+}
