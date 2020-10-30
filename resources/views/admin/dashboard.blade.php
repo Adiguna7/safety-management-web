@@ -18,7 +18,7 @@ Dashboard Admin
                   </div>                  
                 </div>
                 <div class="row no-gutters">
-                    <div class="btn btn-info mt-3" onclick="window.location.href='/user/survey'">Lihat Hasil</div>                
+                    <div class="btn btn-info mt-3" onclick="window.location.href='/admin/hasil/institusi'">Lihat Hasil</div>                
                 </div>                
               </div>
             </div>
@@ -34,7 +34,7 @@ Dashboard Admin
                   </div>                  
                 </div>
                 <div class="row no-gutters">
-                    <div class="btn btn-success mt-3" onclick="window.location.href='/user/survey'">Lihat Hasil</div>                
+                    <div class="btn btn-success mt-3" onclick="window.location.href='/admin/hasil/personal'">Lihat Hasil</div>                
                 </div>                
               </div>
             </div>
@@ -50,7 +50,7 @@ Dashboard Admin
                   </div>                  
                 </div>                
                 <div class="row no-gutters">                                                                                 
-                    <button class="btn btn-primary mt-3" onclick="window.location.href='/user/survey'">Alternatif Solusi</button>                                                            
+                    <button class="btn btn-primary mt-3" onclick="window.location.href='/admin/solusi'">Alternatif Solusi</button>                                                            
                 </div>                
               </div>
             </div>
@@ -66,11 +66,27 @@ Dashboard Admin
                   </div>                  
                 </div>
                 <div class="row no-gutters">
-                    <div class="btn btn-warning mt-3" onclick="window.location.href='/user/survey'">Survey Question</div>                
+                    <div class="btn btn-warning mt-3" onclick="window.location.href='/admin/question'">Survey Question</div>                
                 </div>                
               </div>
             </div>
         </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+          <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body d-flex flex-column justify-content-between">
+              <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                  <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Institusi</div>
+                  <div class="h5 mb-0 font-weight-bold text-gray-800 mt-2">Tambah, Edit, Hapus Institusi</div>
+                </div>                  
+              </div>
+              <div class="row no-gutters">
+                  <div class="btn btn-info mt-3" onclick="window.location.href='/admin/institution'">Institusi</div>                
+              </div>                
+            </div>
+          </div>
+      </div>
 
         <!-- Earnings (Monthly) Card Example -->        
 

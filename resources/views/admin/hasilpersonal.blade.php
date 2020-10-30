@@ -1,7 +1,7 @@
 @extends('layouts.admindashboard')
 
 @section('header')
-Hasil Institusi
+Hasil Personal
 @endsection
 
 @section('content')
