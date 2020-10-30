@@ -5,6 +5,13 @@ User Dashboard
 @endsection
 
 @section('content')
+    @elseif($message = Session::get('success'))
+    <div class="row">        
+        <div class="alert alert-success" role="alert">
+            {{ $message }}
+        </div>        
+    </div>
+    @endif
     <div class="row">
         <!-- Earnings (Monthly) Card Example -->
         <div class="col-xl-3 col-md-6 mb-4">

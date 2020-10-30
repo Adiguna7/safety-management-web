@@ -50,7 +50,7 @@ class UserController extends Controller
                 }
                 $message = 'Berhasil mengisi survey';
                 Institution::where('id', $data_institution->id)->update(['response' => ($data_institution->response+1)]);
-                return redirect('/survey')->with(['success' => $message]);
+                return redirect('/user/dashboard')->with(['success' => $message]);
             }
         }
         else{
