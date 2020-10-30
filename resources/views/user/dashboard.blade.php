@@ -5,7 +5,7 @@ User Dashboard
 @endsection
 
 @section('content')
-    @elseif($message = Session::get('success'))
+    @if($message = Session::get('success'))
     <div class="row">        
         <div class="alert alert-success" role="alert">
             {{ $message }}
