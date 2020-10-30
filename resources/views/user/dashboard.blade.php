@@ -38,7 +38,7 @@ User Dashboard
                   </div>                  
                 </div>
                 <div class="row no-gutters">
-                    <div class="btn btn-success mt-3" onclick="window.location.href='/user/survey'">Lihat Hasil</div>                
+                    <div class="btn btn-success mt-3" onclick="window.location.href='/survey/hasil/personal'">Lihat Hasil</div>
                 </div>                
               </div>
             </div>
@@ -55,7 +55,8 @@ User Dashboard
                   </div>                  
                 </div>
                 <div class="row no-gutters">
-                    <div class="btn btn-info mt-3" onclick="window.location.href='/user/survey'">Lihat Hasil</div>                
+                  
+                    <div class="btn btn-info mt-3" onclick="window.location.href='/survey/hasil/institusi'">Lihat Hasil</div>                
                 </div>                
               </div>
             </div>
