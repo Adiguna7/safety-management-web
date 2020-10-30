@@ -15,6 +15,10 @@
                     @endif
 
                     {{ __('You are logged in!') }}
+
+                    <br/>
+                    <br/>
+                    <button class="text-white btn btn-info" onclick="window.location.href='user/dashboard'">Go to Dashboard</button>
                 </div>
             </div>
         </div>

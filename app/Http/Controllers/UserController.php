@@ -24,7 +24,7 @@ class UserController extends Controller
 
     public function submit(Request $request){
         $user = Auth::user();
-        $data_institution = Institution::where('institution_code', $request->institution_code)->get()->first();
+        $data_institution = Institution::where('id', $user->id)->get()->first();
         $allinput = $request->all();
 
         if($data_institution !== null){
@@ -54,7 +54,7 @@ class UserController extends Controller
             }
         }
         else{
-            $message = 'Code yang anda masukkan salah';
+            $message = 'Institusi tidak terdaftar';
             return redirect('/survey')->with(['error' => $message]);
         }
 

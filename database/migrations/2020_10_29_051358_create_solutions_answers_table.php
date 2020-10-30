@@ -16,13 +16,11 @@ class CreateSolutionsAnswersTable extends Migration
         Schema::create('solutions_answers', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('solution_id');
-            $table->unsignedBigInteger('institution_id');
+            $table->unsignedBigInteger('solution_id');            
             $table->boolean('is_done')->default(0);
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('institution_id')->references('id')->on('institution');
+            $table->foreign('user_id')->references('id')->on('users');            
             $table->foreign('solution_id')->references('id')->on('solutions');
         });
     }

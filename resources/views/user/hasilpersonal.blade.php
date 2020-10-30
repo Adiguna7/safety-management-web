@@ -5,7 +5,7 @@ Hasil Survey Personal
 @endsection
 
 @section('content')
-<div class="row">
+<div class="row mt-5">
     <div class="col-lg-4">
         <!-- Basic Card Example -->
         <div class="card shadow mb-4">                       

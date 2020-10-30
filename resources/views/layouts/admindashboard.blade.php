@@ -17,9 +17,10 @@
 
   <!-- Custom styles for this template-->
   <link href="{{ asset('css/sb-admin-2.min.css') }}" rel="stylesheet">
-
   {{-- style --}}
   <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+
+  <link href="{{ asset('vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
 
   {{-- vis --}}
   <link rel="stylesheet" href="{{ asset('css/vis.min.css') }}">
@@ -83,9 +84,16 @@
       </li>         
       
       <li class="nav-item">
-        <a class="nav-link collapsed" href="/admin/solusi">
+        <a class="nav-link collapsed" href="/admin/question">
           <i class="fas fa-fw fa-question"></i>
           <span>Question</span>
+        </a>        
+      </li>         
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="/admin/institution">
+          <i class="fas fa-fw fa-building"></i>
+          <span>Institution</span>
         </a>        
       </li>         
 
@@ -214,6 +222,10 @@
   <!-- Page level custom scripts -->
   <script src="{{ asset('js/demo/chart-area-demo.js') }}"></script>
   <script src="{{ asset('js/demo/chart-pie-demo.js') }}"></script>
+
+  <script src="{{ asset('vendor/datatables/jquery.dataTables.min.js') }}"></script>
+  <script src="{{ asset('vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
+  <script src="{{ asset('js/indextable.js') }}"></script>
 
 </body>
 

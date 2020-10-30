@@ -15,13 +15,13 @@
         </div>        
     </div>
     @endif
-    <div class="row">
-        <div class="col-lg-12 d-flex justify-content-center">            
+    <div class="row justify-content-center">
+        <div class="col-md-10 d-flex justify-content-center">            
             <form action="/survey/submit" method="post">
                 @csrf
                 @foreach ($survey_question as $question)                                
                 <div class="form-group mt-5">
-                    <div>Number {{ $question->no_question }} :</div>
+                    <div>Number {{ $question->no_question }} ({{ $question->dimensi }}):</div>
                     <div class="mt-2">{{ $question->text_question }}</div>
                     <div class="form-check mt-3">
                         <input class="form-check-input" type="radio" name="question{{$question->no_question}}" id="exampleRadios1" value="1" checked>
@@ -55,14 +55,7 @@
                     </div> 
                     <input type="hidden" name="questionid{{ $question->no_question }}" value="{{ $question->id }}">                                                   
                 </div>
-                @endforeach                
-                <div class="col-lg-4">                    
-                    <div class="form-group">
-                        <label for="institutioncode">Institution Code</label>
-                        <input type="text" name="institution_code" class="form-control" id="institutioncode" aria-describedby="institutioncode" placeholder="Institution Code ...">                    
-                        <small>* Get Code From Admin</small>
-                    </div>
-                </div>                
+                @endforeach                                               
                 <button type="submit" class="btn btn-primary mt-3">Submit</button>
             </form>
         </div>

@@ -17,6 +17,7 @@ class CreateInstitutionTable extends Migration
             $table->id();
             $table->string('institution_name');
             $table->string('institution_code');
+            $table->string('response')->default(0);
             $table->string('max_response');
             $table->timestamps();
         });

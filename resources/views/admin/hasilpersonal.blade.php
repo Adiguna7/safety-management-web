@@ -11,7 +11,7 @@ Hasil Institusi
             <label for="institution">Select User</label>
             <select class="form-control" id="institution" name="institution_id">
                 @foreach ($users as $user)
-                    <option value="{{ $user->id }}" @if($userbyid->id === $user->id) selected @endif>{{ $user->name }}</option>
+                    <option value="{{ $user->id }}" @if(isset($userbyid) && $userbyid->id === $user->id) selected @endif>{{ $user->name }}</option>
                 @endforeach                                
             </select>
         </div>
