@@ -24,19 +24,19 @@ class UserController extends Controller
 
     public function submit(Request $request){
         $user = Auth::user();
-        $data_institution = Institution::where('id', $user->id)->get()->first();
+        $data_institution = Institution::where('id', $user->institution_id)->get()->first();
         $allinput = $request->all();
 
         if($data_institution !== null){
             if($data_institution->response >= $data_institution->max_response){
                 $message = 'Max response sudah terpenuhi, tidak menerima response kembali';
-                return redirect('/survey')->with(['error' => $message]);
+                return redirect('/user/dashboard')->with(['error' => $message]);
             }
             else{
                 $check_survey = SurveyResponse::where('user_id', $user->id)->get()->first();
                 if(isset($check_survey) && $check_survey !== null){
                     $message = 'Anda sudah mengisi survey';
-                    return redirect('/survey')->with(['error' => $message]);
+                    return redirect('/user/dashboard')->with(['error' => $message]);
                 }
                 
                 $last_no_question = SurveyQuestion::latest('no_question')->first();
