@@ -65,37 +65,45 @@
       <li class="nav-item">
         <a class="nav-link collapsed" href="/admin/hasil/personal">
           <i class="fas fa-fw fa-male"></i>
-          <span>Personal</span>
+          <span>Hasil Personal</span>
         </a>        
       </li>
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="/admin/hasil/institusi">
           <i class="fas fa-fw fa-users"></i>
-          <span>Institusi</span>
+          <span>Hasil Group</span>
         </a>        
       </li>
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="/admin/solusi">
           <i class="fas fa-fw fa-lightbulb"></i>
-          <span>Solusi</span>
+          <span>Data Solusi</span>
         </a>        
       </li>         
       
       <li class="nav-item">
         <a class="nav-link collapsed" href="/admin/question">
           <i class="fas fa-fw fa-question"></i>
-          <span>Question</span>
+          <span>Data Question</span>
         </a>        
       </li>         
 
       <li class="nav-item">
+        <a class="nav-link collapsed" href="/admin/users">
+          <i class="fas fa-user-shield"></i>
+          <span>Data Users</span>
+        </a>        
+      </li>
+
+      <li class="nav-item">
         <a class="nav-link collapsed" href="/admin/institution">
           <i class="fas fa-fw fa-building"></i>
-          <span>Institution</span>
+          <span>Data Institusi</span>
         </a>        
-      </li>         
+      </li>
+            
 
       <!-- Divider -->
       <hr class="sidebar-divider d-none d-md-block">

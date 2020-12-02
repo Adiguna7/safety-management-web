@@ -25,7 +25,8 @@ User Dashboard
                 </div>                
                 <div class="row no-gutters">
                     @if(isset($checkresponse))                        
-                        <button disabled class="btn btn-primary mt-3" onclick="window.location.href='/user/survey'">Sudah mengisi</button>                                                                
+                        <small class="text-primary">*Anda sudah mengisi survey</small>                        
+                        <button class="btn btn-primary mt-3" onclick="window.location.href='/user/survey'">Isi Lagi</button>                                                                
                     @else
                         <button class="btn btn-primary mt-3" onclick="window.location.href='/user/survey'">Isi Survey</button>                                        
                     @endif                    

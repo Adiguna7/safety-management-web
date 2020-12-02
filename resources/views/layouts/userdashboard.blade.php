@@ -64,21 +64,21 @@
       <li class="nav-item">
         <a class="nav-link collapsed" href="/survey/hasil/personal">
           <i class="fas fa-fw fa-male"></i>
-          <span>Personal</span>
+          <span>Hasil Personal</span>
         </a>        
       </li>
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="/survey/hasil/institusi">
           <i class="fas fa-fw fa-users"></i>
-          <span>Institusi</span>
+          <span>Hasil Group</span>
         </a>        
       </li>
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="/survey/solusi">
           <i class="fas fa-fw fa-lightbulb"></i>
-          <span>Solusi</span>
+          <span>Alternatif Solusi</span>
         </a>        
       </li>             
 

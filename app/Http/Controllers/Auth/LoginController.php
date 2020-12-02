@@ -33,7 +33,7 @@ class LoginController extends Controller
         if($status){
             return '/admin/dashboard';
         }
-        return '/user/survey';
+        return '/user/dashboard';
     }
 
     /**

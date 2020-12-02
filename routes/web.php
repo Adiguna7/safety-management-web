@@ -21,7 +21,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/user/survey', 'UserController@index')->middleware('auth', 'ceksudahisi');
+Route::get('/user/survey', 'UserController@index')->middleware('auth');
 Route::post('/survey/submit', 'UserController@submit')->middleware('auth', 'user');
 
 // user route
@@ -59,6 +59,9 @@ Route::get('/admin/institution', 'AdminController@indexInstitution')->middleware
 Route::post('/admin/institution/create', 'AdminController@createInstitution')->middleware('auth', 'admin');
 Route::post('/admin/institution/update', 'AdminController@updateInstitution')->middleware('auth', 'admin');
 Route::post('/admin/institution/delete', 'AdminController@deleteInstitution')->middleware('auth', 'admin');
+
+Route::get('/admin/users', 'AdminController@indexUsers')->middleware('auth', 'admin');
+Route::post('/admin/users/updateadmin', 'AdminController@updateAdmin')->middleware('auth', 'admin');
 
 
 

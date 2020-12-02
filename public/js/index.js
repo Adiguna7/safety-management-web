@@ -109,19 +109,26 @@ async function requestDataPersonal() {
             enabled: false
         },
         nodes:{
+            borderWidth: 3,
             fixed:{
                 x: true,
                 y: true
             },
-            shape: 'circle'
-        },
+            shape: 'circle',
+            color: {                
+                background: '#6c3e79'                
+            },
+            font: {
+                color: '#FFFFFF'
+            }
+        },        
         edges:{
             arrows: {
                 to: {
                     enabled: true,
                 }
             }
-        }
+        },        
     };
 
     // initialize your network!

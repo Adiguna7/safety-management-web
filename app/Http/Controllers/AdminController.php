@@ -40,7 +40,7 @@ class AdminController extends Controller
     }
 
     public function getInstitusi(Request $request){                    
-        $hasil_survey_institusi = DB::select('SELECT avg(sr.answer) AS rata, sq.dimensi FROM survey_response sr, survey_question sq WHERE sr.question_id = sq.id AND sr.institution_id = ? GROUP BY sq.dimensi ORDER BY rata DESC', [$request->institution_id]);
+        $hasil_survey_institusi = DB::select('SELECT avg(sr.answer) AS rata, sq.dimensi FROM survey_response sr, survey_question sq WHERE sr.question_id = sq.id AND sr.institution_id = ? AND sq.dimensi <> ? GROUP BY sq.dimensi ORDER BY rata DESC', [$request->institution_id, 'risk']);
         return response()->json(['hasil_survey_institusi' => $hasil_survey_institusi] , Response::HTTP_OK);  
     }
 
@@ -56,7 +56,7 @@ class AdminController extends Controller
         
     }
     public function getPersonal(Request $request){                    
-        $hasil_survey_personal = DB::select('SELECT avg(sr.answer) AS rata, sq.dimensi FROM survey_response sr, survey_question sq WHERE sr.question_id = sq.id AND sr.user_id = ? GROUP BY sq.dimensi ORDER BY rata DESC', [$request->user_id]);
+        $hasil_survey_personal = DB::select('SELECT avg(sr.answer) AS rata, sq.dimensi FROM survey_response sr, survey_question sq WHERE sr.question_id = sq.id AND sr.user_id = ? AND sq.dimensi <> ? GROUP BY sq.dimensi ORDER BY rata DESC', [$request->user_id, 'risk']);
         return response()->json(['hasil_survey_personal' => $hasil_survey_personal] , Response::HTTP_OK);  
     }
 
@@ -176,5 +176,29 @@ class AdminController extends Controller
     public function deleteInstitution(Request $request){
         Institution::where('id', $request->institution_id)->delete();
         return redirect('/admin/institution');
+    }
+
+    public function indexUsers(){
+        $users = User::all();
+
+        return view('admin.users', ['users' => $users]);
+    }
+
+    public function updateAdmin(Request $request){
+        $is_admin = $request->is_admin;
+        $userid = $request->userid;
+
+        if($is_admin){
+            User::where('id', $userid)->update([
+                'is_admin' => 0
+            ]);
+        }
+        else{
+            User::where('id', $userid)->update([
+                'is_admin' => 1
+            ]);
+        }
+
+        return redirect('/admin/users');
     }
 }

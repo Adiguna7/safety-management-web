@@ -15,11 +15,16 @@ use App\SolutionsAnswers;
 class UserController extends Controller
 {
     public function index(){
-        $survey_question = SurveyQuestion::all();
-        $user = Auth::user();
+        $survey_question = SurveyQuestion::inRandomOrder()->get();
+        $user = Auth::user();        
 
+        $survey_question = $survey_question->toArray();
+        $options = [1, 2, 3, 4, 5];
+        shuffle($options);
 
-        return view('user.survey', ['survey_question' => $survey_question, 'user' => $user]);
+        // var_dump($options);
+
+        return view('user.survey', ['survey_question' => $survey_question, 'user' => $user, 'options' => $options]);
     }
 
     public function submit(Request $request){
@@ -35,8 +40,7 @@ class UserController extends Controller
             else{
                 $check_survey = SurveyResponse::where('user_id', $user->id)->get()->first();
                 if(isset($check_survey) && $check_survey !== null){
-                    $message = 'Anda sudah mengisi survey';
-                    return redirect('/user/dashboard')->with(['error' => $message]);
+                    SurveyResponse::where('user_id', $user->id)->delete();
                 }
                 
                 $last_no_question = SurveyQuestion::latest('no_question')->first();
@@ -69,13 +73,13 @@ class UserController extends Controller
 
     public function hasilPersonal(){
         $user = Auth::user();
-        $hasil_survey = DB::select('SELECT avg(sr.answer) AS rata, sq.dimensi FROM survey_response sr, survey_question sq WHERE sr.question_id = sq.id AND sr.user_id = ? GROUP BY sq.dimensi ORDER BY rata DESC', [$user->id]);
+        $hasil_survey = DB::select('SELECT avg(sr.answer) AS rata, sq.dimensi FROM survey_response sr, survey_question sq WHERE sr.question_id = sq.id AND sr.user_id = ? GROUP BY sq.dimensi ORDER BY sq.dimensi = ? DESC, rata DESC', [$user->id, 'risk']);
         return view('user.hasilpersonal', ['hasil_survey' => $hasil_survey, 'user' => $user]);
     }
 
     public function getHasilPersonal(){
         $user = Auth::user();
-        $hasil_survey = DB::select('SELECT avg(sr.answer) AS rata, sq.dimensi FROM survey_response sr, survey_question sq WHERE sr.question_id = sq.id AND sr.user_id = ? GROUP BY sq.dimensi ORDER BY rata DESC', [$user->id]);
+        $hasil_survey = DB::select('SELECT avg(sr.answer) AS rata, sq.dimensi FROM survey_response sr, survey_question sq WHERE sr.question_id = sq.id AND sr.user_id = ? AND sq.dimensi <> ? GROUP BY sq.dimensi ORDER BY rata DESC', [$user->id, 'risk']);
         return response()->json(['hasil_survey' => $hasil_survey] , Response::HTTP_OK);  
     }
 
@@ -83,7 +87,7 @@ class UserController extends Controller
         $user = Auth::user();
         $data_institution = Institution::where('id', $user->institution_id)->get()->first();
         
-        $hasil_survey_institusi = DB::select('SELECT avg(sr.answer) AS rata, sq.dimensi FROM survey_response sr, survey_question sq WHERE sr.question_id = sq.id AND sr.institution_id = ? GROUP BY sq.dimensi ORDER BY rata DESC', [$data_institution->id]);
+        $hasil_survey_institusi = DB::select('SELECT avg(sr.answer) AS rata, sq.dimensi FROM survey_response sr, survey_question sq WHERE sr.question_id = sq.id AND sr.institution_id = ? GROUP BY sq.dimensi ORDER BY sq.dimensi = ? DESC, rata DESC', [$data_institution->id, 'risk']);
         return view('user.hasilinstitusi', ["hasil_survey_institusi" => $hasil_survey_institusi, "data_institution" => $data_institution]);        
     }
 
@@ -91,7 +95,7 @@ class UserController extends Controller
         $user = Auth::user();
         $data_institution = Institution::where('id', $user->institution_id)->get()->first();
         
-        $hasil_survey_institusi = DB::select('SELECT avg(sr.answer) AS rata, sq.dimensi FROM survey_response sr, survey_question sq WHERE sr.question_id = sq.id AND sr.institution_id = ? GROUP BY sq.dimensi ORDER BY rata DESC', [$data_institution->id]);
+        $hasil_survey_institusi = DB::select('SELECT avg(sr.answer) AS rata, sq.dimensi FROM survey_response sr, survey_question sq WHERE sr.question_id = sq.id AND sr.institution_id = ? AND sq.dimensi <> ? GROUP BY sq.dimensi ORDER BY rata DESC', [$data_institution->id, 'risk']);
         return response()->json(['hasil_survey_institusi' => $hasil_survey_institusi] , Response::HTTP_OK);  
     }
 

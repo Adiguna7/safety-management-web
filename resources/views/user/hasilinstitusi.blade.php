@@ -13,6 +13,9 @@ Hasil Survey Institusi
                 <h5 class="card-title font-weight-bold">Nama Institusi: {{ $data_institution->institution_name }}</h5>                                    
                 @foreach ($hasil_survey_institusi as $hasil)
                     <p class="card-text">{{ $hasil->dimensi }}<span>: {{ $hasil->rata }}</span></p>
+                    @if($loop->index == 0)
+                        <hr/>
+                    @endif
                 @endforeach
             </div>
         </div>

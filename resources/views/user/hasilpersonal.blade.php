@@ -10,9 +10,12 @@ Hasil Survey Personal
         <!-- Basic Card Example -->
         <div class="card shadow mb-4">                       
             <div class="card-body">              
-                <h5 class="card-title font-weight-bold">Nama : {{ $user->name }}</h5>                                     
-                @foreach ($hasil_survey as $hasil)
-                    <p class="card-text">{{ $hasil->dimensi }}<span>: {{ $hasil->rata }}</span></p>
+                <h5 class="card-title font-weight-bold">Nama : {{ $user->name }}</h5>                                                                     
+                @foreach ($hasil_survey as $hasil)                                                            
+                    <p class="card-text">{{ $hasil->dimensi }}<span>: {{ $hasil->rata }}</span></p>                    
+                    @if($loop->index == 0)
+                        <hr/>
+                    @endif                    
                 @endforeach                  
             </div>
         </div>
