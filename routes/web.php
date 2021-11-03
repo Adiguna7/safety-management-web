@@ -18,6 +18,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('error', function () {
+    return abort(401);
+});
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
@@ -35,33 +39,39 @@ Route::get('/survey/solusi', 'UserController@solusi')->middleware('auth', 'user'
 Route::post('/survey/solusi/save', 'UserController@solusiSave')->middleware('auth', 'user');
 
 
-// ROUTE ADMIN
-Route::get('/admin/dashboard', 'AdminController@index')->middleware('auth', 'admin');
-Route::get('/admin/hasil/institusi', 'AdminController@indexInstitusi')->middleware('auth', 'admin');
-Route::get('/admin/hasil/institusi/{institution_id}', 'AdminController@institusiById')->middleware('auth', 'admin');
-Route::get('/admin/hasil/getinstitusi/{institution_id}', 'AdminController@getInstitusi')->middleware('auth', 'admin');
+// ROUTE SUPER-ADMIN
+Route::get('/super-admin/dashboard', 'AdminController@index')->middleware('auth', 'superadmin');
+Route::get('/super-admin/hasil/institusi', 'AdminController@indexInstitusi')->middleware('auth', 'superadmin');
+Route::get('/super-admin/hasil/institusi/{institution_id}', 'AdminController@institusiById')->middleware('auth', 'superadmin');
+Route::get('/super-admin/hasil/getinstitusi/{institution_id}', 'AdminController@getInstitusi')->middleware('auth', 'superadmin');
 
-Route::get('/admin/hasil/personal', 'AdminController@indexPersonal')->middleware('auth', 'admin');
-Route::get('/admin/hasil/personal/{user_id}', 'AdminController@personalById')->middleware('auth', 'admin');
-Route::get('/admin/hasil/getpersonal/{user_id}', 'AdminController@getPersonal')->middleware('auth', 'admin');
+Route::get('/super-admin/hasil/personal', 'AdminController@indexPersonal')->middleware('auth', 'superadmin');
+Route::get('/super-admin/hasil/personal/{user_id}', 'AdminController@personalById')->middleware('auth', 'superadmin');
+Route::get('/super-admin/hasil/getpersonal/{user_id}', 'AdminController@getPersonal')->middleware('auth', 'superadmin');
 
-Route::get('/admin/solusi', 'AdminController@indexSolusi')->middleware('auth', 'admin');
-Route::post('/admin/solusi/create', 'AdminController@createSolusi')->middleware('auth', 'admin');
-Route::post('/admin/solusi/update', 'AdminController@createSolusi')->middleware('auth', 'admin');
-Route::post('/admin/solusi/delete', 'AdminController@deleteSolusi')->middleware('auth', 'admin');
+Route::get('/super-admin/solusi', 'AdminController@indexSolusi')->middleware('auth', 'superadmin');
+Route::post('/super-admin/solusi/create', 'AdminController@createSolusi')->middleware('auth', 'superadmin');
+Route::post('/super-admin/solusi/update', 'AdminController@createSolusi')->middleware('auth', 'superadmin');
+Route::post('/super-admin/solusi/delete', 'AdminController@deleteSolusi')->middleware('auth', 'superadmin');
 
-Route::get('/admin/question', 'AdminController@indexQuestion')->middleware('auth', 'admin');
-Route::post('/admin/question/create', 'AdminController@createQuestion')->middleware('auth', 'admin');
-Route::post('/admin/question/update', 'AdminController@updateQuestion')->middleware('auth', 'admin');
-Route::post('/admin/question/delete', 'AdminController@deleteQuestion')->middleware('auth', 'admin');
+Route::get('/super-admin/question', 'AdminController@indexQuestion')->middleware('auth', 'superadmin');
+Route::post('/super-admin/question/create', 'AdminController@createQuestion')->middleware('auth', 'superadmin');
+Route::post('/super-admin/question/update', 'AdminController@updateQuestion')->middleware('auth', 'superadmin');
+Route::post('/super-admin/question/delete', 'AdminController@deleteQuestion')->middleware('auth', 'superadmin');
 
-Route::get('/admin/institution', 'AdminController@indexInstitution')->middleware('auth', 'admin');
-Route::post('/admin/institution/create', 'AdminController@createInstitution')->middleware('auth', 'admin');
-Route::post('/admin/institution/update', 'AdminController@updateInstitution')->middleware('auth', 'admin');
-Route::post('/admin/institution/delete', 'AdminController@deleteInstitution')->middleware('auth', 'admin');
+Route::get('/super-admin/institution', 'AdminController@indexInstitution')->middleware('auth', 'superadmin');
+Route::post('/super-admin/institution/create', 'AdminController@createInstitution')->middleware('auth', 'superadmin');
+Route::post('/super-admin/institution/update', 'AdminController@updateInstitution')->middleware('auth', 'superadmin');
+Route::post('/super-admin/institution/delete', 'AdminController@deleteInstitution')->middleware('auth', 'superadmin');
 
-Route::get('/admin/users', 'AdminController@indexUsers')->middleware('auth', 'admin');
-Route::post('/admin/users/updateadmin', 'AdminController@updateAdmin')->middleware('auth', 'admin');
+Route::get('/super-admin/users', 'AdminController@indexUsers')->middleware('auth', 'superadmin');
+Route::post('/super-admin/users/updateadmin', 'AdminController@updateAdmin')->middleware('auth', 'superadmin');
+
+
+Route::get('/super-admin/category-question', 'AdminController@indexCategoryQuestion')->middleware('auth', 'superadmin');
+Route::post('/super-admin/category-question/create', 'AdminController@createCategoryQuestion')->middleware('auth', 'superadmin');
+Route::post('/super-admin/category-question/update', 'AdminController@updateCategoryQuestion')->middleware('auth', 'superadmin');
+Route::post('/super-admin/category-question/delete', 'AdminController@deleteCategoryQuestion')->middleware('auth', 'superadmin');
 
 
 

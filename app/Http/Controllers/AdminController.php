@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Institution;
 use App\Solutions;
 use App\SurveyQuestion;
+use App\SurveyCategory;
 use App\User;
 use Illuminate\Support\Facades\DB;
 use PDO;
@@ -14,28 +15,28 @@ use Symfony\Component\HttpFoundation\Response;
 class AdminController extends Controller
 {
     public function index(){
-        return view('admin.dashboard');
+        return view('superadmin.dashboard');
     }
 
     public function indexInstitusi(){
         $institution = Institution::all();        
-        return view('admin.hasilinstitusi', ['institution' => $institution]);
+        return view('superadmin.hasilinstitusi', ['institution' => $institution]);
     }
 
     public function indexPersonal(){
         $users = User::all();
-        return view('admin.hasilpersonal', ['users' => $users]);
+        return view('superadmin.hasilpersonal', ['users' => $users]);
     }
 
     public function institusiById(Request $request){
         $institution = Institution::all();        
         $institutionbyid = Institution::where('id', $request->institution_id)->get()->first();
         if($institutionbyid === null){
-            return redirect('/admin/hasil/institusi');
+            return redirect('/super-admin/hasil/institusi');
         }
         $survey_institusi_admin = DB::select('SELECT avg(sr.answer) AS rata, sq.dimensi FROM survey_response sr, survey_question sq WHERE sr.question_id = sq.id AND sr.institution_id = ? GROUP BY sq.dimensi ORDER BY rata DESC', [$request->institution_id]);
         
-        return view('admin.hasilinstitusi', ['institution' => $institution, 'survey_institusi_admin' => $survey_institusi_admin, 'institutionbyid' => $institutionbyid]);    
+        return view('superadmin.hasilinstitusi', ['institution' => $institution, 'survey_institusi_admin' => $survey_institusi_admin, 'institutionbyid' => $institutionbyid]);    
         
     }
 
@@ -48,11 +49,11 @@ class AdminController extends Controller
         $users = User::all();        
         $userbyid = User::where('id', $request->user_id)->get()->first();
         if($userbyid === null){
-            return redirect('/admin/hasil/personal');
+            return redirect('/super-admin/hasil/personal');
         }
         $survey_personal_admin = DB::select('SELECT avg(sr.answer) AS rata, sq.dimensi FROM survey_response sr, survey_question sq WHERE sr.question_id = sq.id AND sr.user_id = ? GROUP BY sq.dimensi ORDER BY rata DESC', [$request->user_id]);
         
-        return view('admin.hasilpersonal', ['users' => $users, 'survey_personal_admin' => $survey_personal_admin, 'userbyid' => $userbyid]);    
+        return view('superadmin.hasilpersonal', ['users' => $users, 'survey_personal_admin' => $survey_personal_admin, 'userbyid' => $userbyid]);    
         
     }
     public function getPersonal(Request $request){                    
@@ -60,10 +61,11 @@ class AdminController extends Controller
         return response()->json(['hasil_survey_personal' => $hasil_survey_personal] , Response::HTTP_OK);  
     }
 
+    // ==================================== SOLUSI ====================================
     public function indexSolusi(){
         $solutions = Solutions::all();
 
-        return view('admin.solusi', ['solutions' => $solutions]);
+        return view('superadmin.solusi', ['solutions' => $solutions]);
     }
 
     public function createSolusi(Request $request){
@@ -78,7 +80,7 @@ class AdminController extends Controller
             'keterangan' => $request->keterangan,
         ]);
 
-        return redirect('/admin/solusi');
+        return redirect('/super-admin/solusi');
 
     }
 
@@ -94,18 +96,19 @@ class AdminController extends Controller
             'keterangan' => $request->keterangan,
         ]);
 
-        return redirect('/admin/solusi');
+        return redirect('/super-admin/solusi');
     }
 
     public function deleteSolusi(Request $request){
         Solutions::where('id', $request->solutions_id)->delete();
-        return redirect('/admin/solusi');
+        return redirect('/super-admin/solusi');
     }
 
+    // ==================================== QUESTION ====================================
     public function indexQuestion(){
         $survey_question = SurveyQuestion::all();
 
-        return view('admin.question', ['survey_question' => $survey_question]);
+        return view('superadmin.question', ['survey_question' => $survey_question]);
     }
 
     public function createQuestion(Request $request){
@@ -123,7 +126,7 @@ class AdminController extends Controller
             'option_5' => $request->option_5,
         ]);
 
-        return redirect('/admin/question');
+        return redirect('/super-admin/question');
     }
 
     public function updateQuestion(Request $request){
@@ -139,19 +142,20 @@ class AdminController extends Controller
             'option_4' => $request->option_4,
             'option_5' => $request->option_5,
         ]);
-        return redirect('/admin/question');
+        return redirect('/super-admin/question');
     }
 
     public function deleteQuestion(Request $request){
         SurveyQuestion::where('id', $request->question_id)->delete();
 
-        return redirect('/admin/question');
+        return redirect('/super-admin/question');
     }
 
+    // ==================================== INSTITUTION ====================================
     public function indexInstitution(){
         $institutions = Institution::all();
 
-        return view('admin.institution', ['institutions' => $institutions]);
+        return view('superadmin.institution', ['institutions' => $institutions]);
     }
 
     public function createInstitution(Request $request){
@@ -160,7 +164,7 @@ class AdminController extends Controller
             'institution_code' => $request->institution_code,
             'max_response' => $request->max_response,
         ]);
-        return redirect('/admin/institution');
+        return redirect('/super-admin/institution');
     }
 
     public function updateInstitution(Request $request){
@@ -170,18 +174,19 @@ class AdminController extends Controller
             'institution_code' => $request->institution_code,
             'max_response' => $request->max_response,
         ]);
-        return redirect('/admin/institution');
+        return redirect('/super-admin/institution');
     }
 
     public function deleteInstitution(Request $request){
         Institution::where('id', $request->institution_id)->delete();
-        return redirect('/admin/institution');
+        return redirect('/super-admin/institution');
     }
 
+    // ==================================== USERS ====================================
     public function indexUsers(){
         $users = User::all();
 
-        return view('admin.users', ['users' => $users]);
+        return view('superadmin.users', ['users' => $users]);
     }
 
     public function updateAdmin(Request $request){
@@ -199,6 +204,38 @@ class AdminController extends Controller
             ]);
         }
 
-        return redirect('/admin/users');
+        return redirect('/super-admin/users');
+    }
+
+    // ==================================== CATEGORY QUESTION ====================================
+    public function indexCategoryQuestion(){
+        $survey_category = SurveyCategory::all();
+
+        return view('superadmin.questioncategory', ['survey_category' => $survey_category]);
+    }
+
+    public function createCategoryQuestion(Request $request){
+        // echo $request->option_1;
+        SurveyCategory::create([
+            'nama' => $request->nama
+        ]);
+        $success = "Berhasil menambahkan data category question";
+        return redirect('/super-admin/category-question')->with(['success' => $success]);
+    }
+
+    public function updateCategoryQuestion(Request $request){
+        SurveyCategory::where('id', $request->category_id)->update([
+            'nama' => $request->nama
+        ]);
+
+        $success = "Berhasil update data category question";
+        return redirect('/super-admin/category-question')->with(['success' => $success]);
+    }
+
+    public function deleteCategoryQuestion(Request $request){
+        SurveyCategory::where('id', $request->category_id)->delete();
+
+        $success = "Berhasil delete data category question";
+        return redirect('/super-admin/category-question')->with(['success' => $success]);
     }
 }
