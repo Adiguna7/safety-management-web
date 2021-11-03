@@ -1,0 +1,4 @@
+bug dari alternatif solusi
+pada hasil personal jangan ditampilkan user yang menjadi admin
+pada saat register jika bisa menggunakan kode dibandingkan institusi
+pada saat register pertama kali, buat super admin
