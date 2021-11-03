@@ -1,4 +1,4 @@
-@extends('layouts.admindashboard')
+@extends('layouts.superadmindashboard')
 
 @section('header')
 Dashboard Admin
@@ -19,7 +19,7 @@ Dashboard Admin
                 </div>                  
               </div>
               <div class="row no-gutters">
-                  <div class="btn btn-success mt-3" onclick="window.location.href='/admin/hasil/personal'">Lihat Hasil</div>                
+                  <div class="btn btn-success mt-3" onclick="window.location.href='/super-admin/hasil/personal'">Lihat Hasil</div>                
               </div>                
             </div>
           </div>
@@ -35,7 +35,7 @@ Dashboard Admin
                   </div>                  
                 </div>
                 <div class="row no-gutters">
-                    <div class="btn btn-info mt-3" onclick="window.location.href='/admin/hasil/institusi'">Lihat Hasil</div>                
+                    <div class="btn btn-info mt-3" onclick="window.location.href='/super-admin/hasil/institusi'">Lihat Hasil</div>                
                 </div>                
               </div>
             </div>
@@ -51,7 +51,7 @@ Dashboard Admin
                   </div>                  
                 </div>                
                 <div class="row no-gutters">                                                                                 
-                    <button class="btn btn-primary mt-3" onclick="window.location.href='/admin/solusi'">Alternatif Solusi</button>                                                            
+                    <button class="btn btn-primary mt-3" onclick="window.location.href='/super-admin/solusi'">Alternatif Solusi</button>                                                            
                 </div>                
               </div>
             </div>
@@ -67,7 +67,7 @@ Dashboard Admin
                   </div>                  
                 </div>
                 <div class="row no-gutters">
-                    <div class="btn btn-warning mt-3" onclick="window.location.href='/admin/question'">Survey Question</div>                
+                    <div class="btn btn-warning mt-3" onclick="window.location.href='/super-admin/question'">Survey Question</div>                
                 </div>                
               </div>
             </div>
@@ -83,7 +83,7 @@ Dashboard Admin
                 </div>                  
               </div>
               <div class="row no-gutters">
-                  <div class="btn btn-success mt-3" onclick="window.location.href='/admin/users'">Users</div>                
+                  <div class="btn btn-success mt-3" onclick="window.location.href='/super-admin/users'">Users</div>                
               </div>                
             </div>
           </div>
@@ -99,7 +99,7 @@ Dashboard Admin
                 </div>                  
               </div>
               <div class="row no-gutters">
-                  <div class="btn btn-info mt-3" onclick="window.location.href='/admin/institution'">Institusi</div>                
+                  <div class="btn btn-info mt-3" onclick="window.location.href='/super-admin/institution'">Institusi</div>                
               </div>                
             </div>
           </div>

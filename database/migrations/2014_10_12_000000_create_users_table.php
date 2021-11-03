@@ -17,12 +17,13 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->enum('role', ['user_umum', 'super_admin', 'admin', 'user_perusahaan'])->default('user_umum');
             $table->boolean('is_admin')->default('0');
             $table->unsignedBigInteger('institution_id');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->rememberToken();
-            $table->timestamps();
+            $table->rememberToken();            
+            $table->timestamps();            
 
             $table->foreign('institution_id')->references('id')->on('institution');
         });

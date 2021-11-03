@@ -64,7 +64,13 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'ceksudahisi' => \App\Http\Middleware\CekSudahIsi::class,
+        // user untuk user umum
+        // admin untuk admin perusahaan
+        // super_admin untuk admin semua sistem
+        // user_perusahaan untuk user perusahaan
         'admin' => \App\Http\Middleware\Admin::class,
-        'user' => \App\Http\Middleware\User::class
+        'user' => \App\Http\Middleware\User::class,
+        'superadmin' => \App\Http\Middleware\SuperAdmin::class,
+        'userperusahaan' => \App\Http\Middleware\UserPerusahaan::class,
     ];
 }

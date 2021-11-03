@@ -29,9 +29,15 @@ class LoginController extends Controller
      */
     public function redirectTo()
     {
-        $status = Auth::user()->is_admin;
-        if($status){
+        $user = Auth::user();
+        if($user->is_admin && $user->role == "super_admin"){
+            return '/super-admin/dashboard';
+        }
+        else if($user->is_admin && $user->role == "admin"){
             return '/admin/dashboard';
+        }
+        else if(!$user->is_admin && $user->role == "user_perusahaan"){
+            return '/user-perusahaan/dashboard';
         }
         return '/user/dashboard';
     }

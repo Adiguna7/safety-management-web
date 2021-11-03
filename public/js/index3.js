@@ -28,7 +28,7 @@ async function requestDataPersonal() {
     var link = link_full.split("/");
     var param = link[6];
     // console.log(foo[6])    
-    let result = await makeRequest("GET", '/admin/hasil/getinstitusi/'+param);    
+    let result = await makeRequest("GET", '/super-admin/hasil/getinstitusi/'+param);    
     result = JSON.parse(result);    
     var data_personal = result.hasil_survey_institusi;
     // console.log(data_personal.hasil_survey);

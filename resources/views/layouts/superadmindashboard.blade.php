@@ -36,11 +36,11 @@
     <ul class="navbar-nav bg-gradient-info sidebar sidebar-dark accordion" id="accordionSidebar">
 
       <!-- Sidebar - Brand -->
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/admin/dashboard">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/super-admin/dashboard">
         <div class="sidebar-brand-icon rotate-n-15">
           <i class="fas fa-hard-hat"></i>
         </div>
-        <div class="sidebar-brand-text mx-3">Admin Safety</div>
+        <div class="sidebar-brand-text mx-3">Super Admin</div>
       </a>
 
       <!-- Divider -->
@@ -48,7 +48,7 @@
 
       <!-- Nav Item - Dashboard -->
       <li class="nav-item">
-        <a class="nav-link" href="/admin/dashboard">
+        <a class="nav-link" href="/super-admin/dashboard">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Dashboard</span></a>
       </li>
@@ -63,42 +63,49 @@
 
       <!-- Nav Item - Pages Collapse Menu -->
       <li class="nav-item">
-        <a class="nav-link collapsed" href="/admin/hasil/personal">
+        <a class="nav-link collapsed" href="/super-admin/hasil/personal">
           <i class="fas fa-fw fa-male"></i>
           <span>Hasil Personal</span>
         </a>        
       </li>
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="/admin/hasil/institusi">
+        <a class="nav-link collapsed" href="/super-admin/hasil/institusi">
           <i class="fas fa-fw fa-users"></i>
           <span>Hasil Group</span>
         </a>        
       </li>
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="/admin/solusi">
+        <a class="nav-link collapsed" href="/super-admin/solusi">
           <i class="fas fa-fw fa-lightbulb"></i>
           <span>Data Solusi</span>
         </a>        
       </li>         
       
       <li class="nav-item">
-        <a class="nav-link collapsed" href="/admin/question">
+        <a class="nav-link collapsed" href="/super-admin/question">
           <i class="fas fa-fw fa-question"></i>
           <span>Data Question</span>
         </a>        
-      </li>         
+      </li>     
+      
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="/super-admin/category-question">
+          <i class="fas fa-fw fa-layer-group"></i>
+          <span>Data Category Question</span>
+        </a>        
+      </li>     
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="/admin/users">
+        <a class="nav-link collapsed" href="/super-admin/users">
           <i class="fas fa-user-shield"></i>
           <span>Data Users</span>
         </a>        
       </li>
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="/admin/institution">
+        <a class="nav-link collapsed" href="/super-admin/institution">
           <i class="fas fa-fw fa-building"></i>
           <span>Data Institusi</span>
         </a>        
@@ -162,7 +169,7 @@
 
         <!-- Begin Page Content -->
         <div class="container-fluid" style="min-height: 100vh">
-
+          @include('layouts.messages')
           <!-- Page Heading -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">@yield('header')</h1>            

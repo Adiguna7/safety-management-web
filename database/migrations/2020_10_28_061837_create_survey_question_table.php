@@ -16,7 +16,7 @@ class CreateSurveyQuestionTable extends Migration
         Schema::create('survey_question', function (Blueprint $table) {
             $table->id();
             $table->enum('dimensi',['commitment', 'leadership', 'responsibility', 'engagement', 'risk', 'competence', 'informationcommunication', 'organizationallearning']);
-            $table->string('category');
+            $table->unsignedBigInteger('category_id');
             $table->integer('no_question');
             $table->string('keyword');
             $table->text('text_question');
@@ -25,7 +25,9 @@ class CreateSurveyQuestionTable extends Migration
             $table->string('option_3');
             $table->string('option_4');
             $table->string('option_5');
-            $table->timestamps();
+            $table->timestamps();       
+            
+            $table->foreign('category_id')->references('id')->on('survey_category');
         });
     }
 

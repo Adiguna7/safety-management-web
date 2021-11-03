@@ -1,4 +1,4 @@
-@extends('layouts.admindashboard')
+@extends('layouts.superadmindashboard')
 
 @section('header')
 Hasil Personal
@@ -15,7 +15,7 @@ Hasil Personal
                 @endforeach                                
             </select>
         </div>
-        <button class="btn btn-info" onclick="window.location.href='/admin/hasil/personal/'+document.getElementById('institution').value">Select</button>        
+        <button class="btn btn-info" onclick="window.location.href='/super-admin/hasil/personal/'+document.getElementById('institution').value">Select</button>        
     </div>
 </div>
 

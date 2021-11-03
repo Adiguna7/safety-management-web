@@ -16,7 +16,8 @@ class CreateInstitutionTable extends Migration
         Schema::create('institution', function (Blueprint $table) {
             $table->id();
             $table->string('institution_name');
-            $table->string('institution_code');
+            $table->enum('category', ['institution', 'company', 'umum']);
+            $table->string('institution_code')->nullable();
             $table->string('response')->default(0);
             $table->string('max_response');
             $table->timestamps();

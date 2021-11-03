@@ -1,7 +1,7 @@
-@extends('layouts.admindashboard')
+@extends('layouts.superadmindashboard')
 
 @section('header')
-Data Survey Question
+Data Alternatif Solusi
 @endsection
 
 @section('content')
@@ -14,12 +14,12 @@ Data Survey Question
             <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Tambah Data Survey Question</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Tambah Data Alternatif Solusi</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
                 </div>
-                <form action="/admin/question/create" method="post">
+                <form action="/super-admin/solusi/create" method="post">
                     @csrf
                     <div class="modal-body">                    
                         <div class="form-group">                                                
@@ -36,32 +36,26 @@ Data Survey Question
                             </select>
                         </div>
                         <div class="form-group">                        
-                            <input required type="text" class="form-control" name="category" placeholder="Category ..." required>
+                            <input type="text" class="form-control" name="solution" placeholder="Solution ..." required>
                         </div>                    
                         <div class="form-group">                        
-                            <input required type="number" class="form-control" name="no_question" placeholder="Number Question ...">
+                            <input type="text" class="form-control" name="article" placeholder="Article ...">
                         </div>                    
                         <div class="form-group">                        
-                            <input required type="text" class="form-control" name="keyword" placeholder="Keyword ...">
+                            <input type="text" class="form-control" name="tahun" placeholder="Tahun ...">
                         </div>
                         <div class="form-group">                        
-                            <input required type="text" class="form-control" name="text_question" placeholder="Question ...">
+                            <input type="text" class="form-control" name="author" placeholder="Author ...">
                         </div>                    
                         <div class="form-group">                        
-                            <input required type="text" class="form-control" name="option_1" placeholder="Opsi 1 ...">
-                        </div>
+                            <input type="text" class="form-control" name="link_doi" placeholder="Link DOI ...">
+                        </div>                    
                         <div class="form-group">                        
-                            <input required type="text" class="form-control" name="option_2" placeholder="Opsi 2 ...">
+                            <input type="text" class="form-control" name="company_background" placeholder="Company Background ...">
+                        </div>                    
+                        <div class="form-group">                        
+                            <input type="text" class="form-control" name="keterangan" placeholder="Keterangan ...">
                         </div>                                        
-                        <div class="form-group">                        
-                            <input required type="text" class="form-control" name="option_3" placeholder="Opsi 3 ...">
-                        </div>                    
-                        <div class="form-group">                        
-                            <input required type="text" class="form-control" name="option_4" placeholder="Opsi 4 ...">
-                        </div>                    
-                        <div class="form-group">                        
-                            <input required type="text" class="form-control" name="option_5" placeholder="Opsi 5 ...">
-                        </div>                                                                                    
                     </div>
                     <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -81,46 +75,42 @@ Data Survey Question
                 <tr>
                   <th>id</th>
                   <th>Dimensi</th>
-                  <th>Category</th>
-                  <th>No Question</th>
-                  <th>Keyword</th>
-                  <th>Question</th>
-                  <th>Option1</th>
-                  <th>Option2</th>                  
-                  <th>Option3</th>                  
-                  <th>Option4</th>                  
-                  <th>Option5</th>                                    
+                  <th>Solution</th>
+                  <th>Article</th>
+                  <th>Tahun</th>
+                  <th>Author</th>
+                  <th>Link Doi</th>
+                  <th>Company Background</th>
+                  <th>Keterangan</th>
                   <th>Update</th>
                   <th>Delete</th>
                 </tr>
               </thead>              
               <tbody>
-                @foreach ($survey_question as $item)                                
+                @foreach ($solutions as $item)                                
                 <tr>
                   <td>{{ $item->id }}</td>
                   <td>{{ $item->dimensi }}</td>
-                  <td>{{ $item->category }}</td>
-                  <td>{{ $item->no_question }}</td>
-                  <td>{{ $item->keyword }}</td>
-                  <td>{{ $item->text_question }}</td>
-                  <td>{{ $item->option_1 }}</td>
-                  <td>{{ $item->option_2 }}</td>
-                  <td>{{ $item->option_3 }}</td>
-                  <td>{{ $item->option_4 }}</td>
-                  <td>{{ $item->option_5 }}</td>                  
-                  <td><button class="btn btn-info" data-toggle="modal" data-target="#updatequestionModal{{ $item->id }}">Update</button></td>
+                  <td>{{ $item->solution }}</td>
+                  <td>{{ $item->article }}</td>
+                  <td>{{ $item->tahun }}</td>
+                  <td>{{ $item->author }}</td>
+                  <td>{{ $item->link_doi }}</td>
+                  <td>{{ $item->company_background }}</td>
+                  <td>{{ $item->keterangan }}</td>
+                  <td><button class="btn btn-info" data-toggle="modal" data-target="#updatedataModal{{ $item->id }}">Update</button></td>
                     <!-- Modal Update Data -->
-                    <div class="modal fade" id="updatequestionModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="updatequestionModalLabel" aria-hidden="true">
+                    <div class="modal fade" id="updatedataModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="updatedataModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                            <h5 class="modal-title" id="updatedataModalLabel{{ $item->id }}">Update Question No Question  {{ $item->no_question }}</h5>
+                            <h5 class="modal-title" id="updatedataModalLabel{{ $item->id }}">Update Alternatif Solusi ID {{ $item->id }}</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                             </div>
-                            <form action="/admin/question/update" method="post">
-                                <input type="hidden" name="question_id" value="{{ $item->id }}">
+                            <form action="/super-admin/solusi/update" method="post">
+                                <input type="hidden" name="solutions_id" value="{{ $item->id }}">
                                 @csrf
                                 <div class="modal-body">                    
                                     <div class="form-group">                                                
@@ -137,31 +127,25 @@ Data Survey Question
                                         </select>
                                     </div>
                                     <div class="form-group">                        
-                                        <input required type="text" class="form-control" name="category" placeholder="Category ..." value="{{ $item->category }}">
+                                        <input type="text" class="form-control" name="solution" placeholder="Solution ..." required value="{{ $item->solution }}">
                                     </div>                    
                                     <div class="form-group">                        
-                                        <input required type="number" class="form-control" name="no_question" placeholder="Number Question ..." value="{{ $item->category }}">
+                                        <input type="text" class="form-control" name="article" placeholder="Article ..." value="{{ $item->article }}">
                                     </div>                    
                                     <div class="form-group">                        
-                                        <input required type="text" class="form-control" name="keyword" placeholder="Keyword ..." value="{{ $item->keyword }}">
+                                        <input type="text" class="form-control" name="tahun" placeholder="Tahun ..." value="{{ $item->tahun }}">
                                     </div>
                                     <div class="form-group">                        
-                                        <input required type="text" class="form-control" name="text_question" placeholder="Question ..." value="{{ $item->text_question }}">
+                                        <input type="text" class="form-control" name="author" placeholder="Author ..." value="{{ $item->author }}">
                                     </div>                    
                                     <div class="form-group">                        
-                                        <input required type="text" class="form-control" name="option_1" placeholder="Opsi 1 ..." value="{{ $item->option_1 }}">
-                                    </div>
-                                    <div class="form-group">                        
-                                        <input required type="text" class="form-control" name="option_2" placeholder="Opsi 2 ..." value="{{ $item->option_2 }}">
-                                    </div>                                        
-                                    <div class="form-group">                        
-                                        <input required type="text" class="form-control" name="option_3" placeholder="Opsi 3 ..." value="{{ $item->option_3 }}">
+                                        <input type="text" class="form-control" name="link_doi" placeholder="Link DOI ..." value="{{ $item->link_doi }}">
                                     </div>                    
                                     <div class="form-group">                        
-                                        <input required type="text" class="form-control" name="option_4" placeholder="Opsi 4 ..." value="{{ $item->option_4 }}">
+                                        <input type="text" class="form-control" name="company_background" placeholder="Company Background ..." value="{{ $item->company_background }}">
                                     </div>                    
                                     <div class="form-group">                        
-                                        <input required type="text" class="form-control" name="option_5" placeholder="Opsi 5 ..." value="{{ $item->option_5 }}">
+                                        <input type="text" class="form-control" name="keterangan" placeholder="Keterangan ..." value="{{ $item->keterangan }}">
                                     </div>                                        
                                 </div>
                                 <div class="modal-footer">
@@ -171,22 +155,22 @@ Data Survey Question
                             </div>
                         </div>
                     </div>
-                  <td><button class="btn btn-danger" data-toggle="modal" data-target="#deletequestionModal{{ $item->id }}">Delete</button></td>
-                  <!-- Modal Delete Data -->
-                  <div class="modal fade" id="deletequestionModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="deletedataModalLabel" aria-hidden="true">
+                  <td><button class="btn btn-danger" data-toggle="modal" data-target="#deletedataModal{{ $item->id }}">Delete</button></td>
+                  <!-- Modal Update Data -->
+                  <div class="modal fade" id="deletedataModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="deletedataModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                        <h5 class="modal-title" id="deletequestionModalLabel{{ $item->id }}">Delete Survey Question no {{ $item->id }}</h5>
+                        <h5 class="modal-title" id="deletedataModalLabel{{ $item->id }}">Delete Alternatif Solusi ID {{ $item->id }}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                         </div>
-                        <form action="/admin/question/delete" method="post">
-                            <input type="hidden" name="question_id" value="{{ $item->id }}">
+                        <form action="/super-admin/solusi/delete" method="post">
+                            <input type="hidden" name="solutions_id" value="{{ $item->id }}">
                             @csrf
                             <div class="modal-body">                    
-                                <div>Yakin akan menghapus survey question no {{ $item->id }}?</div>                                
+                                <div>Yakin akan menghapus alternatif solusi id {{ $item->id }}?</div>                                
                             </div>
                             <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

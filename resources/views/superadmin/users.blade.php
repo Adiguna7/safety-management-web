@@ -1,4 +1,4 @@
-@extends('layouts.admindashboard')
+@extends('layouts.superadmindashboard')
 
 @section('header')
 Data Users
@@ -27,14 +27,14 @@ Data Users
                     <td>{{ $item->is_admin }}</td>
                     <td class="text-center">
                         @if($item->is_admin == 1)
-                        <form action="/admin/users/updateadmin" method="post">
+                        <form action="/super-admin/users/updateadmin" method="post">
                             @csrf
                             <input type="hidden" name="is_admin" value="{{ $item->is_admin }}">
                             <input type="hidden" name="userid" value="{{ $item->id }}">
                             <button type="submit" class="btn btn-info">to user</button>
                         </form>                        
                         @else
-                        <form action="/admin/users/updateadmin" method="post">
+                        <form action="/super-admin/users/updateadmin" method="post">
                             @csrf
                             <input type="hidden" name="is_admin" value="{{ $item->is_admin }}">
                             <input type="hidden" name="userid" value="{{ $item->id }}">

@@ -1,4 +1,4 @@
-@extends('layouts.admindashboard')
+@extends('layouts.superadmindashboard')
 
 @section('header')
 Data Alternatif Solusi
@@ -19,7 +19,7 @@ Data Alternatif Solusi
                     <span aria-hidden="true">&times;</span>
                 </button>
                 </div>
-                <form action="/admin/institution/create" method="post">
+                <form action="/super-admin/institution/create" method="post">
                     @csrf
                     <div class="modal-body">                                            
                         <div class="form-group">                        
@@ -76,7 +76,7 @@ Data Alternatif Solusi
                                 <span aria-hidden="true">&times;</span>
                             </button>
                             </div>
-                            <form action="/admin/institution/update" method="post">
+                            <form action="/super-admin/institution/update" method="post">
                                 <input type="hidden" name="institution_id" value="{{ $item->id }}">
                                 @csrf
                                 <div class="modal-body">                    
@@ -108,7 +108,7 @@ Data Alternatif Solusi
                             <span aria-hidden="true">&times;</span>
                         </button>
                         </div>
-                        <form action="/admin/institution/delete" method="post">
+                        <form action="/super-admin/institution/delete" method="post">
                             <input type="hidden" name="institution_id" value="{{ $item->id }}">
                             @csrf
                             <div class="modal-body">                    

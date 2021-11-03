@@ -1,11 +1,11 @@
 <?php
 
 namespace App\Http\Middleware;
-
-use Closure;
 use Illuminate\Support\Facades\Auth;
 
-class User
+use Closure;
+
+class UserPerusahaan
 {
     /**
      * Handle an incoming request.
@@ -17,7 +17,7 @@ class User
     public function handle($request, Closure $next)
     {
         $user = Auth::user();
-        if(!$user->is_admin && $user->role == "user"){            
+        if(!$user->is_admin && $user->role == "user_perusahaan"){
             return $next($request);
         }        
         return abort(403);        
