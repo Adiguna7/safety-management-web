@@ -106,16 +106,33 @@ class AdminController extends Controller
 
     // ==================================== QUESTION ====================================
     public function indexQuestion(){
-        $survey_question = SurveyQuestion::all();
+        // $survey_question = SurveyQuestion::all();
+        $survey_category = SurveyCategory::all();
 
-        return view('superadmin.question', ['survey_question' => $survey_question]);
+        $survey_question = SurveyQuestion::join('survey_category', 'survey_category.id', 'survey_question.category_id')
+                                    ->select(
+                                        'survey_question.id',
+                                        'survey_question.dimensi',
+                                        'survey_question.category_id',
+                                        'survey_question.no_question',
+                                        'survey_question.keyword',
+                                        'survey_question.text_question',
+                                        'survey_question.option_1',
+                                        'survey_question.option_2',
+                                        'survey_question.option_3',
+                                        'survey_question.option_4',
+                                        'survey_question.option_5',
+
+                                        'survey_category.nama as category'
+                                    )->get();
+        return view('superadmin.question', ['survey_question' => $survey_question, 'survey_category' => $survey_category]);
     }
 
     public function createQuestion(Request $request){
         // echo $request->option_1;
         SurveyQuestion::create([
             'dimensi' => $request->dimensi,
-            'category' => $request->category,
+            'category_id' => $request->category,
             'no_question' => $request->no_question,
             'keyword' => $request->keyword,
             'text_question' => $request->text_question,
@@ -126,13 +143,14 @@ class AdminController extends Controller
             'option_5' => $request->option_5,
         ]);
 
-        return redirect('/super-admin/question');
+        $success = "Berhasil menambah data question";
+        return redirect('/super-admin/question')->with(["success" => $success]);
     }
 
     public function updateQuestion(Request $request){
         SurveyQuestion::where('id', $request->question_id)->update([
             'dimensi' => $request->dimensi,
-            'category' => $request->category,
+            'category_id' => $request->category,
             'no_question' => $request->no_question,
             'keyword' => $request->keyword,
             'text_question' => $request->text_question,
@@ -142,13 +160,16 @@ class AdminController extends Controller
             'option_4' => $request->option_4,
             'option_5' => $request->option_5,
         ]);
-        return redirect('/super-admin/question');
+
+        $success = "Berhasil update data question";
+        return redirect('/super-admin/question')->with(["success" => $success]);
     }
 
     public function deleteQuestion(Request $request){
         SurveyQuestion::where('id', $request->question_id)->delete();
 
-        return redirect('/super-admin/question');
+        $success = "Berhasil delete data question";
+        return redirect('/super-admin/question')->with(["success" => $success]);
     }
 
     // ==================================== INSTITUTION ====================================

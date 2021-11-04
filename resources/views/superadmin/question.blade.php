@@ -35,8 +35,11 @@ Data Survey Question
                                 <option value="8">Organizational Learning</option>
                             </select>
                         </div>
-                        <div class="form-group">                        
-                            <input required type="text" class="form-control" name="category" placeholder="Category ..." required>
+                        <div class="form-group">   
+                            <select class="form-control" required name="category" id="category">
+                                <option disabled selected>Category ...</option>
+                                @foreach ($survey_category as $item)<option value="{{$item->id}}" @if(old('category') == $item->id){{"selected"}}@endif>{{$item->nama}}</option>@endforeach                                    
+                            <select>                                                 
                         </div>                    
                         <div class="form-group">                        
                             <input required type="number" class="form-control" name="no_question" placeholder="Number Question ...">
@@ -137,10 +140,13 @@ Data Survey Question
                                         </select>
                                     </div>
                                     <div class="form-group">                        
-                                        <input required type="text" class="form-control" name="category" placeholder="Category ..." value="{{ $item->category }}">
+                                        <select class="form-control" required name="category" id="category">
+                                            <option disabled selected>Category ...</option>
+                                            @foreach ($survey_category as $category)<option value="{{$category->id}}" @if($item->category_id == $category->id){{"selected"}}@endif>{{$category->nama}}</option>@endforeach                                    
+                                        <select> 
                                     </div>                    
                                     <div class="form-group">                        
-                                        <input required type="number" class="form-control" name="no_question" placeholder="Number Question ..." value="{{ $item->category }}">
+                                        <input required type="number" class="form-control" name="no_question" placeholder="Number Question ..." value="{{ $item->no_question }}">
                                     </div>                    
                                     <div class="form-group">                        
                                         <input required type="text" class="form-control" name="keyword" placeholder="Keyword ..." value="{{ $item->keyword }}">
@@ -177,7 +183,7 @@ Data Survey Question
                     <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                        <h5 class="modal-title" id="deletequestionModalLabel{{ $item->id }}">Delete Survey Question no {{ $item->id }}</h5>
+                        <h5 class="modal-title" id="deletequestionModalLabel{{ $item->id }}">Delete Survey Question no {{ $item->no_question }}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -186,7 +192,7 @@ Data Survey Question
                             <input type="hidden" name="question_id" value="{{ $item->id }}">
                             @csrf
                             <div class="modal-body">                    
-                                <div>Yakin akan menghapus survey question no {{ $item->id }}?</div>                                
+                                <div>Yakin akan menghapus survey question no {{ $item->no_question }}?</div>                                
                             </div>
                             <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
