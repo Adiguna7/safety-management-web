@@ -17,7 +17,7 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->enum('role', ['user_umum', 'super_admin', 'admin', 'user_perusahaan'])->default('user_umum');
+            $table->enum('role', ['user', 'super_admin', 'admin', 'user_perusahaan', 'deleted'])->default('user');
             $table->boolean('is_admin')->default('0');
             $table->unsignedBigInteger('institution_id');
             $table->timestamp('email_verified_at')->nullable();

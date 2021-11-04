@@ -8,6 +8,7 @@ use App\Solutions;
 use App\SurveyQuestion;
 use App\SurveyCategory;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use PDO;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,6 +49,9 @@ class AdminController extends Controller
     public function personalById(Request $request){
         $users = User::all();        
         $userbyid = User::where('id', $request->user_id)->get()->first();
+        if(Auth::user()->id == $request->user_id){
+            return abort(403);
+        }
         if($userbyid === null){
             return redirect('/super-admin/hasil/personal');
         }
@@ -211,21 +215,25 @@ class AdminController extends Controller
     }
 
     public function updateAdmin(Request $request){
-        $is_admin = $request->is_admin;
         $userid = $request->userid;
+        $is_admin = false;    
+        $role = $request->role;    
+        switch ($role) {
+            case 'super_admin':
+                $is_admin = true;                
+                break;
+            case 'admin':
+                $is_admin = true;                
+                break;                    
+        }                
 
-        if($is_admin){
-            User::where('id', $userid)->update([
-                'is_admin' => 0
-            ]);
-        }
-        else{
-            User::where('id', $userid)->update([
-                'is_admin' => 1
-            ]);
-        }
-
-        return redirect('/super-admin/users');
+        User::where('id', $userid)->update([
+            'is_admin' => $is_admin,
+            'role' => $role
+        ]);
+        
+        $success = "Berhasil update data user";
+        return redirect('/super-admin/users')->with(["success" => $success]);
     }
 
     // ==================================== CATEGORY QUESTION ====================================

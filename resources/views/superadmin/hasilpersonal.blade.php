@@ -10,8 +10,11 @@ Hasil Personal
         <div class="form-group">
             <label for="institution">Select User</label>
             <select class="form-control" id="institution" name="institution_id">
-                @foreach ($users as $user)
-                    <option value="{{ $user->id }}" @if(isset($userbyid) && $userbyid->id === $user->id) selected @endif>{{ $user->name }}</option>
+                @foreach ($users as $user)                    
+                    @if($user->id == Auth::user()->id)
+                        @continue
+                    @endif                    
+                    <option value="{{ $user->id }}" @if(isset($userbyid)) selected @endif>{{ $user->name }}</option>
                 @endforeach                                
             </select>
         </div>

@@ -18,9 +18,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('error', function () {
-    return abort(401);
-});
+// Route::get('error', function () {
+//     return view('errors.deletedaccount');
+// });
 
 Auth::routes();
 
