@@ -14,8 +14,9 @@ Data Users
                   <th>id</th>
                   <th>Name</th>
                   <th>Email</th>
-                  <th>Admin</th>                  
-                  <th>Action</th>
+                  <th>Admin</th>  
+                  <th>Institution</th>                                  
+                  <th>Role</th>
                 </tr>
               </thead>              
               <tbody>
@@ -23,8 +24,19 @@ Data Users
                 <tr>
                     <td>{{ $item->id }}</td>
                     <td>{{ $item->name }}</td>
-                    <td>{{ $item->email }}</td>
+                    <td>{{ $item->email }}</td>                    
                     <td>{{ $item->is_admin }}</td>
+                    <td>
+                      <form action="/super-admin/users/updateinstitution" method="post">
+                        @csrf
+                        <input type="hidden" name="userid" value="{{$item->id}}">
+                        <select name="institution_id" class="form-control" required name="role" onchange="this.form.submit()">
+                          @foreach($institution as $item2)
+                            <option value="{{$item2->id}}" @if($item->institution_id == $item2->id) selected @endif>{{$item2->institution_name}}</option>
+                          @endforeach   
+                        </select>                   
+                      </form>
+                    </td>                    
                     <td>                        
                         <form action="/super-admin/users/updateadmin" method="post">
                             @csrf                            

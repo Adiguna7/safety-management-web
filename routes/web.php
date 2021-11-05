@@ -66,6 +66,7 @@ Route::post('/super-admin/institution/delete', 'AdminController@deleteInstitutio
 
 Route::get('/super-admin/users', 'AdminController@indexUsers')->middleware('auth', 'superadmin');
 Route::post('/super-admin/users/updateadmin', 'AdminController@updateAdmin')->middleware('auth', 'superadmin');
+Route::post('/super-admin/users/updateinstitution', 'AdminController@updateUserInstitution')->middleware('auth', 'superadmin');
 
 
 Route::get('/super-admin/category-question', 'AdminController@indexCategoryQuestion')->middleware('auth', 'superadmin');

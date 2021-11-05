@@ -518,9 +518,22 @@ class AdminController extends Controller
 
     // ==================================== USERS ====================================
     public function indexUsers(){
-        $users = User::all();
+        $users = User::join('institution', 'institution.id', 'users.institution_id')
+                ->select(
+                    'users.id',
+                    'users.name',
+                    'users.email',
+                    'users.role',
+                    'users.is_admin',
+                    'users.institution_id',
+                    'users.created_at',
 
-        return view('superadmin.users', ['users' => $users]);
+                    'institution.institution_name as institution'
+                )                
+                ->get();
+
+        $institution = Institution::all();        
+        return view('superadmin.users', ['users' => $users, 'institution' => $institution]);
     }
 
     public function updateAdmin(Request $request){
@@ -542,6 +555,18 @@ class AdminController extends Controller
         ]);
         
         $success = "Berhasil update data user";
+        return redirect('/super-admin/users')->with(["success" => $success]);
+    }
+
+    public function updateUserInstitution(Request $request){
+        $userid = $request->userid;        
+        $institution_id = $request->institution_id;                
+
+        User::where('id', $userid)->update([
+            'institution_id' => $institution_id
+        ]);
+        
+        $success = "Berhasil update data institution user";
         return redirect('/super-admin/users')->with(["success" => $success]);
     }
 

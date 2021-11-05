@@ -11,4 +11,7 @@ class Institution extends Model
     protected $fillable = [
         'institution_name', 'institution_code', 'max_response', 'response'
     ];
+    protected $casts = [
+        'id' => 'integer',
+    ];
 }
