@@ -51,7 +51,7 @@ Route::get('/super-admin/hasil/getpersonal/{user_id}', 'AdminController@getPerso
 
 Route::get('/super-admin/solusi', 'AdminController@indexSolusi')->middleware('auth', 'superadmin');
 Route::post('/super-admin/solusi/create', 'AdminController@createSolusi')->middleware('auth', 'superadmin');
-Route::post('/super-admin/solusi/update', 'AdminController@createSolusi')->middleware('auth', 'superadmin');
+Route::post('/super-admin/solusi/update', 'AdminController@updateSolusi')->middleware('auth', 'superadmin');
 Route::post('/super-admin/solusi/delete', 'AdminController@deleteSolusi')->middleware('auth', 'superadmin');
 
 Route::get('/super-admin/question', 'AdminController@indexQuestion')->middleware('auth', 'superadmin');
