@@ -40,12 +40,12 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="institutionname" class="col-md-4 col-form-label text-md-right">Institution Name</label>
+                            <label for="institutioncode" class="col-md-4 col-form-label text-md-right">Institution/Company Code</label>                            
 
                             <div class="col-md-6">
-                                <input id="institutionname" type="text" class="form-control @error('institutionname') is-invalid @enderror" value="{{ old('institutionname') }}" name="institutionname" required>
-
-                                @error('institutionname')
+                                <input id="institutioncode" type="text" class="form-control @error('institutioncode') is-invalid @enderror" value="{{ old('institutioncode') }}" name="institutioncode" required>
+                                <small>*Code bisa didapatkan dari admin, Jika umum gunakan code {{\App\Institution::where('category', 'umum')->first()->institution_code}}</small>
+                                @error('institutioncode')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>

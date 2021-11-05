@@ -51,14 +51,16 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         $messages = [
-            'institutionname' => 'Nama institusi tidak terdaftar'            
+            'institutionname' => 'Nama institusi tidak terdaftar',
+            'institutioncode' => 'Code institusi salah'            
         ];
 
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'institutionname' => ['exists:App\Institution,institution_name']
+            'institutionname' => ['exists:App\Institution,institution_name'],
+            'institutioncode' => ['exists:App\Institution,institution_code']
         ]);
     }
 
@@ -70,7 +72,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $institution = Institution::where('institution_name', $data['institutionname'])->get('id')->first();
+        $institution = Institution::where('institution_code', $data['institutioncode'])->get('id')->first();
         // echo $institution;
 
         return User::create([
