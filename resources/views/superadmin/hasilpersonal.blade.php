@@ -9,7 +9,7 @@ Hasil Personal
     <div class="col-lg-6">        
         <div class="form-group">
             <label for="institution">Select User</label>
-            <select class="form-control" id="institution" name="institution_id">
+            <select class="form-control" id="user" name="user_id" onchange="window.location.href=''">
                 @foreach ($users as $user)                    
                     @if($user->id == Auth::user()->id)
                         @continue
@@ -17,8 +17,7 @@ Hasil Personal
                     <option value="{{ $user->id }}" @if(isset($userbyid)) selected @endif>{{ $user->name }}</option>
                 @endforeach                                
             </select>
-        </div>
-        <button class="btn btn-info" onclick="window.location.href='/super-admin/hasil/personal/'+document.getElementById('institution').value">Select</button>        
+        </div>        
     </div>
 </div>
 

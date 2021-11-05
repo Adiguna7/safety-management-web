@@ -4,16 +4,15 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class SurveyQuestion extends Model
+class SurveyQuestionGroup extends Model
 {
-    protected $table = 'survey_question';
+    protected $table = 'survey_group_question';
 
     protected $fillable = [
-        'dimensi', 'category_id', 'no_question', 'keyword', 'text_question', 'option_1', 'option_2', 'option_3', 'option_4', 'option_5'
+        'dimensi', 'category_id', 'no_question', 'keyword', 'text_question', 'option_1', 'option_2', 'option_3', 'option_4', 'option_5', 'survey_question_id', 'institution_id'
     ];
 
     protected $casts = [
-        'id' => 'integer',
         'dimensi' => 'string',
         'category_id' => 'integer',
         'no_question' => 'integer',
@@ -24,6 +23,5 @@ class SurveyQuestion extends Model
         'option_3' => 'string',
         'option_4' => 'string',
         'option_5' => 'string',        
-        'survey_question_id' => 'integer'
     ];
 }

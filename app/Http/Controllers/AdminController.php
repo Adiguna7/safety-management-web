@@ -6,12 +6,14 @@ use Illuminate\Http\Request;
 use App\Institution;
 use App\Solutions;
 use App\SurveyQuestion;
+use App\SurveyQuestionGroup;
 use App\SurveyCategory;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use PDO;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Log;
 
 class AdminController extends Controller
 {
@@ -175,6 +177,313 @@ class AdminController extends Controller
         $success = "Berhasil delete data question";
         return redirect('/super-admin/question')->with(["success" => $success]);
     }
+
+    // ==================================== QUESTION GROUP====================================
+    public function indexQuestionGroup(){
+        // $survey_question = SurveyQuestion::all();
+        $survey_category = SurveyCategory::all();
+
+        $survey_question = SurveyQuestion::join('survey_category', 'survey_category.id', 'survey_question.category_id')
+                                    ->select(
+                                        'survey_question.id',
+                                        'survey_question.dimensi',
+                                        'survey_question.category_id',
+                                        'survey_question.no_question',
+                                        'survey_question.keyword',
+                                        'survey_question.text_question',
+                                        'survey_question.option_1',
+                                        'survey_question.option_2',
+                                        'survey_question.option_3',
+                                        'survey_question.option_4',
+                                        'survey_question.option_5',
+
+                                        'survey_category.nama as category'
+                                    )->get();
+        $institution = Institution::all();
+        return view('superadmin.questiongroup', ['survey_question' => $survey_question, 'survey_category' => $survey_category, 'institution' => $institution]);
+    }
+
+    public function indexQuestionGroupById(Request $request){
+        $institution_id = $request->institution_id;
+        $survey_category = SurveyCategory::all();
+
+        $survey_question = SurveyQuestion::join('survey_category', 'survey_category.id', 'survey_question.category_id')
+                                    ->select(
+                                        'survey_question.id',
+                                        'survey_question.dimensi',
+                                        'survey_question.category_id',
+                                        'survey_question.no_question',
+                                        'survey_question.keyword',
+                                        'survey_question.text_question',
+                                        'survey_question.option_1',
+                                        'survey_question.option_2',
+                                        'survey_question.option_3',
+                                        'survey_question.option_4',
+                                        'survey_question.option_5',
+
+                                        'survey_category.nama as category'
+                                    )->get();
+        $institution = Institution::all();        
+        $survey_question_group = SurveyQuestionGroup::join('institution', 'institution.id', 'survey_group_question.institution_id')        
+                                ->join('survey_category', 'survey_category.id', 'survey_group_question.category_id')
+                                ->where('institution_id', $institution_id)
+                                ->select(
+                                    'survey_group_question.id',
+                                    'survey_group_question.dimensi',
+                                    'survey_group_question.category_id',
+                                    'survey_group_question.no_question',
+                                    'survey_group_question.keyword',
+                                    'survey_group_question.text_question',
+                                    'survey_group_question.option_1',
+                                    'survey_group_question.option_2',
+                                    'survey_group_question.option_3',
+                                    'survey_group_question.option_4',
+                                    'survey_group_question.option_5',
+
+                                    'survey_category.nama as category',
+                                    'survey_group_question.institution_id',
+                                    'institution.institution_name as institution'
+                                )
+                                ->get();
+        return view('superadmin.questiongroup', ['survey_category' => $survey_category, 'survey_question' => $survey_question, 'institution' => $institution, 'survey_question_group' => $survey_question_group, 'institution_id' => $institution_id]);
+    }
+    
+    public function importQuestionGroup(Request $request){
+        // untuk view import (get)
+        $institution_id = $request->institution_id;
+        $institutionById = Institution::where('id', $institution_id)
+                            ->first();
+        $surveyQuestionGroupQuestionId = SurveyQuestionGroup::select('survey_question_id')
+                                        ->where('institution_id', $institution_id)
+                                        ->get();
+        // $survey_question = SurveyQuestion::all();
+        $survey_category = SurveyCategory::all();
+
+        $survey_question = SurveyQuestion::join('survey_category', 'survey_category.id', 'survey_question.category_id')
+                                    ->select(
+                                        'survey_question.id',
+                                        'survey_question.dimensi',
+                                        'survey_question.category_id',
+                                        'survey_question.no_question',
+                                        'survey_question.keyword',
+                                        'survey_question.text_question',
+                                        'survey_question.option_1',
+                                        'survey_question.option_2',
+                                        'survey_question.option_3',
+                                        'survey_question.option_4',
+                                        'survey_question.option_5',
+
+                                        'survey_category.nama as category'
+                                    )->get();  
+        
+        $survey_question_id_group = array();
+        
+        foreach ($surveyQuestionGroupQuestionId as $item) {
+            array_push($survey_question_id_group, $item->survey_question_id);
+        }        
+
+        foreach($survey_question as $item){
+            $item->status_import = "no";
+            // echo($item->id);
+            // echo(" ");
+            if(in_array($item->id, $survey_question_id_group)){
+                $item->status_import = "yes";
+            }
+        }                        
+        // echo($survey_question);
+        return view('superadmin.questiongroupimport', ['survey_question' => $survey_question, 'survey_category' => $survey_category, 'institutionById' => $institutionById]);
+    }
+
+    public function importSaveQuestionGroup(Request $request){
+        $survey_question_id = $request->survey_question_id;
+        $institution_id = $request->institution_id;
+        try {
+            $institutionById = Institution::where('id', $institution_id)
+                            ->first();
+
+            $surveyQuestionById = SurveyQuestion::join('survey_category', 'survey_category.id', 'survey_question.category_id')
+                                ->where('survey_question.id', $survey_question_id)
+                                ->select(
+                                    'survey_question.id',
+                                    'survey_question.dimensi',
+                                    'survey_question.category_id',
+                                    'survey_question.no_question',
+                                    'survey_question.keyword',
+                                    'survey_question.text_question',
+                                    'survey_question.option_1',
+                                    'survey_question.option_2',
+                                    'survey_question.option_3',
+                                    'survey_question.option_4',
+                                    'survey_question.option_5',
+
+                                    'survey_category.nama as category'
+                                )->first();  
+
+            SurveyQuestionGroup::create([
+                'dimensi' => $surveyQuestionById->dimensi,
+                'category_id' => $surveyQuestionById->category_id,
+                'no_question' => $surveyQuestionById->no_question,
+                'keyword' => $surveyQuestionById->keyword,
+                'text_question' => $surveyQuestionById->text_question,
+                'option_1' => $surveyQuestionById->option_1,
+                'option_2' => $surveyQuestionById->option_2,
+                'option_3' => $surveyQuestionById->option_3,
+                'option_4' => $surveyQuestionById->option_4,
+                'option_5' => $surveyQuestionById->option_5,
+                
+                'survey_question_id' => $survey_question_id,
+                'institution_id' => $institution_id
+            ]);
+            
+            $success = "Berhasil save import data ke " . $institutionById->institution_name;
+            return response()->json(['success' => $success] , Response::HTTP_OK);  
+        }
+        catch(\Exception $e)
+        {
+            Log::error($e->getMessage());
+            return response()->json(['error' => $e->getMessage(), 'institution_id' => $institution_id] , Response::HTTP_OK);  
+        }        
+    }
+
+    public function importCancelQuestionGroup(Request $request){
+        $survey_question_id = $request->survey_question_id;
+        $institution_id = $request->institution_id;
+        try {
+            $institutionById = Institution::where('id', $institution_id)
+                            ->first();            
+
+            SurveyQuestionGroup::where('institution_id', $institution_id)
+                                ->where('survey_question_id', $survey_question_id)
+                                ->delete();
+            
+            $success = "Berhasil cancel import data ke " . $institutionById->institution_name;
+            return response()->json(['success' => $success] , Response::HTTP_OK);  
+        }
+        catch(\Exception $e)
+        {
+            Log::error($e->getMessage());
+            return response()->json(['error' => $e->getMessage(), 'institution_id' => $institution_id] , Response::HTTP_OK);  
+        }        
+    }
+
+    public function createQuestionGroup(Request $request){
+        $institution_id = $request->institution_id;
+        $institutionById = Institution::where('id', $institution_id)
+                            ->first();
+
+        try {
+            SurveyQuestionGroup::create([
+                'dimensi' => $request->dimensi,
+                'category_id' => $request->category,
+                'no_question' => $request->no_question,
+                'keyword' => $request->keyword,
+                'text_question' => $request->text_question,
+                'option_1' => $request->option_1,
+                'option_2' => $request->option_2,
+                'option_3' => $request->option_3,
+                'option_4' => $request->option_4,
+                'option_5' => $request->option_5,
+
+                'institution_id' => $institution_id
+            ]);
+
+            $success = "Berhasil menambah data question untuk group " . $institutionById->institution_name;
+            return redirect('/super-admin/question-group/' . $institution_id)->with(["success" => $success]);
+        }
+        catch(\Exception $e)
+        {            
+            return redirect('/super-admin/question-group/' . $institution_id)->with(["error" => $e->getMessage()]);
+        }
+    }
+
+    public function updateQuestionGroup(Request $request){
+        $institution_id = $request->institution_id;        
+        try {
+            SurveyQuestionGroup::where('id', $request->question_id)->update([
+                'dimensi' => $request->dimensi,
+                'category_id' => $request->category,
+                'no_question' => $request->no_question,
+                'keyword' => $request->keyword,
+                'text_question' => $request->text_question,
+                'option_1' => $request->option_1,
+                'option_2' => $request->option_2,
+                'option_3' => $request->option_3,
+                'option_4' => $request->option_4,
+                'option_5' => $request->option_5,
+            ]);
+
+            $institutionById = Institution::where('id', $institution_id)->first();
+            $success = "Berhasil update data question group " . $institutionById->institution_name;
+            return redirect('/super-admin/question-group/'.$institution_id)->with(["success" => $success]);
+        }     
+        catch(\Exception $e)
+        {            
+            return redirect('/super-admin/question-group/' . $institution_id)->with(["error" => $e->getMessage()]);
+        }   
+        
+    }
+
+    public function deleteQuestionGroup(Request $request){
+        $institution_id = $request->institution_id;
+
+        try {
+
+            SurveyQuestionGroup::where('id', $request->question_id)->delete();
+            $institutionById = Institution::where('id', $institution_id)->first();
+            $success = "Berhasil delete data question group " . $institutionById->institution_name;
+            return redirect('/super-admin/question-group/'.$institution_id)->with(["success" => $success]);
+
+        } catch (\Exception $e) {
+            return redirect('/super-admin/question-group/' . $institution_id)->with(["error" => $e->getMessage()]);
+        }        
+    }
+
+    // public function getAllSurveyQuestionQuestionGroup(){
+    //     // $survey_question = Su
+    // }
+    // public function createQuestion(Request $request){
+    //     // echo $request->option_1;
+    //     SurveyQuestion::create([
+    //         'dimensi' => $request->dimensi,
+    //         'category_id' => $request->category,
+    //         'no_question' => $request->no_question,
+    //         'keyword' => $request->keyword,
+    //         'text_question' => $request->text_question,
+    //         'option_1' => $request->option_1,
+    //         'option_2' => $request->option_2,
+    //         'option_3' => $request->option_3,
+    //         'option_4' => $request->option_4,
+    //         'option_5' => $request->option_5,
+    //     ]);
+
+    //     $success = "Berhasil menambah data question";
+    //     return redirect('/super-admin/question')->with(["success" => $success]);
+    // }
+
+    // public function updateQuestion(Request $request){
+    //     SurveyQuestion::where('id', $request->question_id)->update([
+    //         'dimensi' => $request->dimensi,
+    //         'category_id' => $request->category,
+    //         'no_question' => $request->no_question,
+    //         'keyword' => $request->keyword,
+    //         'text_question' => $request->text_question,
+    //         'option_1' => $request->option_1,
+    //         'option_2' => $request->option_2,
+    //         'option_3' => $request->option_3,
+    //         'option_4' => $request->option_4,
+    //         'option_5' => $request->option_5,
+    //     ]);
+
+    //     $success = "Berhasil update data question";
+    //     return redirect('/super-admin/question')->with(["success" => $success]);
+    // }
+
+    // public function deleteQuestion(Request $request){
+    //     SurveyQuestion::where('id', $request->question_id)->delete();
+
+    //     $success = "Berhasil delete data question";
+    //     return redirect('/super-admin/question')->with(["success" => $success]);
+    // }
 
     // ==================================== INSTITUTION ====================================
     public function indexInstitution(){

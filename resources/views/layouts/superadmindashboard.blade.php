@@ -8,6 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
 
   <title>Safety Management - Dashboard</title>
 
@@ -88,12 +89,19 @@
           <i class="fas fa-fw fa-question"></i>
           <span>Data Question</span>
         </a>        
-      </li>     
+      </li> 
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="/super-admin/question-group">
+          <i class="fas fa-fw fa-pager"></i>
+          <span>Data GroupQ</span>
+        </a>        
+      </li> 
       
       <li class="nav-item">
         <a class="nav-link collapsed" href="/super-admin/category-question">
           <i class="fas fa-fw fa-layer-group"></i>
-          <span>Data Category Question</span>
+          <span>Data CategoryQ</span>
         </a>        
       </li>     
 

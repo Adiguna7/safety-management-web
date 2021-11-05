@@ -74,4 +74,20 @@ Route::post('/super-admin/category-question/update', 'AdminController@updateCate
 Route::post('/super-admin/category-question/delete', 'AdminController@deleteCategoryQuestion')->middleware('auth', 'superadmin');
 
 
+Route::get('/super-admin/question-group', 'AdminController@indexQuestionGroup')->middleware('auth', 'superadmin');
+Route::get('/super-admin/question-group/{institution_id}', 'AdminController@indexQuestionGroupById')->middleware('auth', 'superadmin');
+Route::post('/super-admin/question-group/create', 'AdminController@createQuestionGroup')->middleware('auth', 'superadmin');
+Route::post('/super-admin/question-group/update', 'AdminController@updateQuestionGroup')->middleware('auth', 'superadmin');
+Route::post('/super-admin/question-group/delete', 'AdminController@deleteQuestionGroup')->middleware('auth', 'superadmin');
+
+Route::get('/super-admin/question-group/import/{institution_id}', 'AdminController@importQuestionGroup')->middleware('auth', 'superadmin');
+Route::get('/super-admin/question-group/import/getallsurveyquestion', 'AdminController@getAllSurveyQuestionQuestionGroup')->middleware('auth', 'superadmin');
+Route::post('/super-admin/question-group/import/save', 'AdminController@importSaveQuestionGroup')->middleware('auth', 'superadmin');
+Route::post('/super-admin/question-group/import/cancel', 'AdminController@importCancelQuestionGroup')->middleware('auth', 'superadmin');
+
+Route::post('/super-admin/question-group/create', 'AdminController@createQuestionGroup')->middleware('auth', 'superadmin');
+Route::post('/super-admin/question-group/update', 'AdminController@updateQuestionGroup')->middleware('auth', 'superadmin');
+Route::post('/super-admin/question-group/delete', 'AdminController@deleteQuestionGroup')->middleware('auth', 'superadmin');
+
+
 
