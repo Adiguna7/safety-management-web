@@ -534,27 +534,69 @@ class AdminController extends Controller
     }
 
     public function createInstitution(Request $request){
-        Institution::create([
-            'institution_name' => $request->institution_name,
-            'institution_code' => $request->institution_code,
-            'max_response' => $request->max_response,
-        ]);
-        return redirect('/super-admin/institution');
+        if($request->category == "expert"){
+            $institutionParentById = Institution::where('id', $request->parent_id)->first();
+            if(empty($institutionParentById)){    
+                $error = "Institusi / Perusahaan parent tidak ditemukan";
+                return redirect('/super-admin/institution')->with(["error" => $error]);
+            }
+            if($institutionParentById->category == "expert" || $institutionParentById->category == "umum"){
+                $error = "Request tidak bisa dilakukan karena expert tidak disambungkan ke institusi / perusahaan";
+                return redirect('/super-admin/institution')->with(["error" => $error]);
+            }
+
+        }        
+        try {
+            Institution::create([
+                'institution_name' => $request->institution_name,
+                'institution_code' => $request->institution_code,
+                'category' => $request->category,
+                'max_response' => $request->max_response,
+                'parent_id' => $request->parent_id
+            ]);
+            $success = "Berhasil menambahkan institusi / perusahaan";
+            return redirect('/super-admin/institution')->with(["success" => $success]);
+        }catch (\Exception $e) {
+            return redirect('/super-admin/institution')->with(["error" => $e->getMessage()]);
+        }        
     }
 
     public function updateInstitution(Request $request){
-        // echo $request;
-        Institution::where('id', $request->institution_id)->update([
-            'institution_name' => $request->institution_name,
-            'institution_code' => $request->institution_code,
-            'max_response' => $request->max_response,
-        ]);
-        return redirect('/super-admin/institution');
+        if($request->category == "expert"){
+            $institutionParentById = Institution::where('id', $request->parent_id)->first();
+            if(empty($institutionParentById)){    
+                $error = "Institusi / Perusahaan parent tidak ditemukan";
+                return redirect('/super-admin/institution')->with(["error" => $error]);
+            }
+            if($institutionParentById->category == "expert" || $institutionParentById->category == "umum"){
+                $error = "Request tidak bisa dilakukan karena expert tidak disambungkan ke institusi / perusahaan";
+                return redirect('/super-admin/institution')->with(["error" => $error]);
+            }
+        }
+        try{
+            Institution::where('id', $request->institution_id)->update([
+                'institution_name' => $request->institution_name,
+                'institution_code' => $request->institution_code,                
+                'category' => $request->category,
+                'max_response' => $request->max_response,
+                'parent_id' => $request->parent_id
+            ]);
+            $success = "Berhasil update institusi / perusahaan";
+            return redirect('/super-admin/institution')->with(["success" => $success]);
+        }catch (\Exception $e) {
+            return redirect('/super-admin/institution')->with(["error" => $e->getMessage()]);
+        }        
     }
 
     public function deleteInstitution(Request $request){
-        Institution::where('id', $request->institution_id)->delete();
-        return redirect('/super-admin/institution');
+        try{
+            Institution::where('id', $request->institution_id)->delete();
+            $success = "Berhasil delete institusi / perusahaan";
+            return redirect('/super-admin/institution')->with(["success" => $success]);
+        }       
+        catch (\Exception $e) {
+            return redirect('/super-admin/institution')->with(["error" => $e->getMessage()]);
+        } 
     }
 
     // ==================================== USERS ====================================

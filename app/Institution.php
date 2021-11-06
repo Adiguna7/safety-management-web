@@ -9,7 +9,7 @@ class Institution extends Model
     protected $table = 'institution';
 
     protected $fillable = [
-        'institution_name', 'institution_code', 'max_response', 'response'
+        'institution_name', 'institution_code', 'max_response', 'response', 'category', 'parent_id'
     ];
     protected $casts = [
         'id' => 'integer',

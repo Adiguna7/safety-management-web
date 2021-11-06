@@ -1,7 +1,7 @@
 @extends('layouts.superadmindashboard')
 
 @section('header')
-Data Alternatif Solusi
+Data Institusi / Perusahaan
 @endsection
 
 @section('content')
@@ -30,7 +30,28 @@ Data Alternatif Solusi
                         </div>                    
                         <div class="form-group">                        
                             <input type="number" class="form-control" name="max_response" placeholder="Max Response ..." required>
-                        </div>                        
+                        </div>                    
+                        <div class="form-group">                                                    
+                            <select class="form-control" required name="category" onchange="checkExpert(this.value)">
+                                <option disabled selected>Category ...</option>
+                                <option value="institution">Institusi</option>
+                                <option value="company">Perusahaan</option>
+                                <option value="umum">Umum</option>
+                                <option value="expert">Expert</option>
+                            </select>
+                        </div>
+                        <div id="ParentId" class="form-group" style="display: none">                                                    
+                            <select class="form-control" name="parent_id">
+                                <option disabled selected>Expert For ...</option>
+                                @foreach ($institutions as $item)
+                                    @if($item->category == "expert" || $item->category == "umum")         
+                                        @continue
+                                    @endif                                           
+                                    <option value="{{$item->id}}">{{$item->institution_name}}</option>                                    
+                                @endforeach
+                            </select>                           
+                            {{-- <input type="text" class="form-control" name="parent_id" placeholder="Expert From ..." required>                             --}}
+                        </div>                                                
                     </div>
                     <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -51,21 +72,33 @@ Data Alternatif Solusi
                   <th>id</th>
                   <th>Institution Name</th>
                   <th>Institution Code</th>
+                  <th>Category</th>
                   <th>User Response</th>
-                  <th>Max Response</th>                  
+                  <th>Max Response</th>                    
                   <th>Update</th>
-                  <th>Delete</th>
+                  <th>Delete</th>                  
                 </tr>
               </thead>              
               <tbody>
                 @foreach ($institutions as $item)                                
                 <tr>
-                  <td>{{ $item->id }}</td>
-                  <td>{{ $item->institution_name }}</td>
-                  <td>{{ $item->institution_code }}</td>
-                  <td>{{ $item->response }}</td>
-                  <td>{{ $item->max_response }}</td>                  
-                  <td><button class="btn btn-info" data-toggle="modal" data-target="#updateinstitutionModal{{ $item->id }}">Update</button></td>
+                    <td>{{ $item->id }}</td>
+                    <td>{{ $item->institution_name }}</td>
+                    <td>{{ $item->institution_code }}</td>
+                    <td>{{ strtoupper($item->category) }}
+                        @if(!empty($item->parent_id))
+                        (
+                        @foreach($institutions as $item2)
+                            @if($item->parent_id == $item2->id)
+                                {{$item2->institution_name}}
+                            @endif
+                        @endforeach
+                        )
+                        @endif
+                    </td>
+                    <td>{{ $item->response }}</td>
+                    <td>{{ $item->max_response }}</td>                  
+                    <td><button class="btn btn-info" data-toggle="modal" data-target="#updateinstitutionModal{{ $item->id }}" onclick="checkExpert(document.getElementById('Category{{$item->id}}').value, 'ParentId{{$item->id}}')">Update</button></td>
                     <!-- Modal Update Data -->
                     <div class="modal fade" id="updateinstitutionModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="updateinstitutionModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
@@ -88,6 +121,27 @@ Data Alternatif Solusi
                                     </div>                    
                                     <div class="form-group">                        
                                         <input type="number" class="form-control" name="max_response" placeholder="Max Response ..." required value="{{ $item->max_response }}">
+                                    </div>
+                                    <div class="form-group">                                                    
+                                        <select id="Category{{$item->id}}" class="form-control" required name="category" onchange="checkExpert(this.value, 'ParentId{{$item->id}}')">
+                                            <option disabled selected>Category ...</option>
+                                            <option value="institution" @if($item->category == "institution") selected @endif>Institusi</option>
+                                            <option value="company" @if($item->category == "company") selected @endif>Perusahaan</option>
+                                            <option value="umum" @if($item->category == "umum") selected @endif>Umum</option>
+                                            <option value="expert" @if($item->category == "expert") selected @endif>Expert</option>
+                                        </select>
+                                    </div>                                    
+                                    <div id="ParentId{{$item->id}}" class="form-group" style="display: none">                                                    
+                                        <select class="form-control" name="parent_id">
+                                            <option disabled selected>Expert For ...</option>
+                                            @foreach ($institutions as $item2)
+                                                @if($item2->category == "expert" || $item2->category == "umum")         
+                                                    @continue
+                                                @endif                                           
+                                                <option value="{{$item2->id}}" @if($item->parent_id == $item2->id) selected @endif>{{$item2->institution_name . " - " . $item2->id}}</option>                                    
+                                            @endforeach
+                                        </select>                           
+                                        {{-- <input type="text" class="form-control" name="parent_id" placeholder="Expert From ..." required>                             --}}
                                     </div>                                       
                                 </div>
                                 <div class="modal-footer">
@@ -128,4 +182,5 @@ Data Alternatif Solusi
     </div>
 </div>  
 
+<script src="{{ asset('js/institution.js') }}"></script>
 @endsection
