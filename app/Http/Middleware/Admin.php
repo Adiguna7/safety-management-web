@@ -18,9 +18,12 @@ class Admin
     {
         $user = Auth::user();
         
-        if($user->is_admin && $user->role == 'admin'){
+        if($user->is_admin && $user->role == 'super_admin'){
             return $next($request);
         }        
+        else if($user->is_admin && $user->role == 'admin'){
+            return $next($request);
+        }
         
         return abort(403);
     }

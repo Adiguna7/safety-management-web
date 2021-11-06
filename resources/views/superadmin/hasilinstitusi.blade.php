@@ -10,8 +10,9 @@ Hasil Institusi
         <div class="form-group">
             <label for="institution">Select Institution</label>
             <select class="form-control" id="institution" name="institution_id">
+                <option selected disabled>Nama Institusi / Company</option>
                 @foreach ($institution as $institut)
-                    <option value="{{ $institut->id }}">{{ $institut->institution_name }}</option>
+                    <option value="{{ $institut->id }}" @if(!empty($institutionbyid->id) && $institutionbyid->id == $institut->id) selected @endif>{{ $institut->institution_name }}</option>
                 @endforeach                                
             </select>
         </div>

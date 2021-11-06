@@ -28,7 +28,7 @@ class CreateSurveyGroupQuestionTable extends Migration
             $table->string('option_5');
             
             $table->unsignedBigInteger('institution_id');
-            $table->unsignedBigInteger('survey_question_id')->nullable()->unique();
+            $table->unsignedBigInteger('survey_question_id')->nullable();
             $table->timestamps();
 
             $table->foreign('institution_id')->references('id')->on('institution');

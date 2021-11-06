@@ -27,17 +27,33 @@ class AdminController extends Controller
     }
 
     public function indexPersonal(){
-        $users = User::all();
+        $users = User::join('institution', 'institution.id', 'users.institution_id')
+                ->select(
+                    'users.id',
+                    'users.name',
+                    'users.email',
+                    'users.role',
+                    'users.is_admin',
+                    'users.institution_id',
+
+                    'institution.institution_name as institution'
+                )
+                ->get();
         return view('superadmin.hasilpersonal', ['users' => $users]);
     }
 
     public function institusiById(Request $request){
         $institution = Institution::all();        
         $institutionbyid = Institution::where('id', $request->institution_id)->get()->first();
-        if($institutionbyid === null){
-            return redirect('/super-admin/hasil/institusi');
+        if(empty($institutionbyid)){
+            $error = "Institusi/Company tidak ditemukan";
+            return redirect('/super-admin/hasil/institusi')->with(["error" => $error]);
         }
         $survey_institusi_admin = DB::select('SELECT avg(sr.answer) AS rata, sq.dimensi FROM survey_response sr, survey_question sq WHERE sr.question_id = sq.id AND sr.institution_id = ? GROUP BY sq.dimensi ORDER BY rata DESC', [$request->institution_id]);
+        if(empty($survey_institusi_admin)){
+            $error = "Users institusi/company " . $institutionbyid->institution_name . " belum ada yang mengisi survey";
+            return redirect('/super-admin/hasil/institusi')->with(["error" => $error]);
+        }
         
         return view('superadmin.hasilinstitusi', ['institution' => $institution, 'survey_institusi_admin' => $survey_institusi_admin, 'institutionbyid' => $institutionbyid]);    
         
@@ -54,10 +70,19 @@ class AdminController extends Controller
         if(Auth::user()->id == $request->user_id){
             return abort(403);
         }
-        if($userbyid === null){
-            return redirect('/super-admin/hasil/personal');
+        if(Auth::user()->role != "super_admin" && Auth::user()->institution_id != $userbyid->institution_id){
+            return abort(403);
+        }
+        if(empty($userbyid)){
+            $error = "User tidak ditemukan";
+            return redirect('/super-admin/hasil/personal')->with(["error" => $error]);
         }
         $survey_personal_admin = DB::select('SELECT avg(sr.answer) AS rata, sq.dimensi FROM survey_response sr, survey_question sq WHERE sr.question_id = sq.id AND sr.user_id = ? GROUP BY sq.dimensi ORDER BY rata DESC', [$request->user_id]);
+
+        if(empty($survey_personal_admin)){
+            $error = "User " . $userbyid->name . " belum mengisi survey";
+            return redirect('/super-admin/hasil/personal')->with(["error" => $error]);
+        }
         
         return view('superadmin.hasilpersonal', ['users' => $users, 'survey_personal_admin' => $survey_personal_admin, 'userbyid' => $userbyid]);    
         
@@ -65,6 +90,11 @@ class AdminController extends Controller
     public function getPersonal(Request $request){                    
         $hasil_survey_personal = DB::select('SELECT avg(sr.answer) AS rata, sq.dimensi FROM survey_response sr, survey_question sq WHERE sr.question_id = sq.id AND sr.user_id = ? AND sq.dimensi <> ? GROUP BY sq.dimensi ORDER BY rata DESC', [$request->user_id, 'risk']);
         return response()->json(['hasil_survey_personal' => $hasil_survey_personal] , Response::HTTP_OK);  
+    }
+
+    // ==================================== ADMIN PERUSAHAAN (HANYA VIEW) ====================================
+    public function indexAdminPerusahaan(){
+        return view('admin.dashboard');
     }
 
     // ==================================== SOLUSI ====================================

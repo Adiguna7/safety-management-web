@@ -34,14 +34,24 @@
   <div id="wrapper">
 
     <!-- Sidebar -->
+    @if(Auth::user()->role == "super_admin")
     <ul class="navbar-nav bg-gradient-info sidebar sidebar-dark accordion" id="accordionSidebar">
+    @elseif(Auth::user()->role == "admin")
+    <ul class="navbar-nav bg-gradient-success sidebar sidebar-dark accordion" id="accordionSidebar">
+    @endif    
 
       <!-- Sidebar - Brand -->
       <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/super-admin/dashboard">
         <div class="sidebar-brand-icon rotate-n-15">
           <i class="fas fa-hard-hat"></i>
         </div>
-        <div class="sidebar-brand-text mx-3">Super Admin</div>
+        <div class="sidebar-brand-text mx-3">
+          @if(Auth::user()->role == "super_admin")
+          Super Admin
+          @elseif(Auth::user()->role == "admin")
+          Admin Perusahaan
+          @endif
+        </div>
       </a>
 
       <!-- Divider -->
@@ -77,20 +87,24 @@
         </a>        
       </li>
 
+      @if(Auth::user()->role == "super_admin")
       <li class="nav-item">
         <a class="nav-link collapsed" href="/super-admin/solusi">
           <i class="fas fa-fw fa-lightbulb"></i>
           <span>Data Solusi</span>
         </a>        
       </li>         
+      @endif
       
+      @if(Auth::user()->role == "super_admin")
       <li class="nav-item">
         <a class="nav-link collapsed" href="/super-admin/question">
           <i class="fas fa-fw fa-question"></i>
           <span>Data Question</span>
         </a>        
       </li> 
-
+      @endif
+      
       <li class="nav-item">
         <a class="nav-link collapsed" href="/super-admin/question-group">
           <i class="fas fa-fw fa-pager"></i>
@@ -98,12 +112,14 @@
         </a>        
       </li> 
       
+      @if(Auth::user()->role == "super_admin")
       <li class="nav-item">
         <a class="nav-link collapsed" href="/super-admin/category-question">
           <i class="fas fa-fw fa-layer-group"></i>
           <span>Data CategoryQ</span>
         </a>        
       </li>     
+      @endif
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="/super-admin/users">
@@ -112,12 +128,14 @@
         </a>        
       </li>
 
+      @if(Auth::user()->role == "super_admin")
       <li class="nav-item">
         <a class="nav-link collapsed" href="/super-admin/institution">
           <i class="fas fa-fw fa-building"></i>
           <span>Data Institusi</span>
         </a>        
       </li>
+      @endif
             
 
       <!-- Divider -->

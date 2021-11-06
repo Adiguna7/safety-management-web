@@ -1,11 +1,8 @@
+{{-- pake superadmin untuk shared view --}}
 @extends('layouts.superadmindashboard')
 
 @section('header')
-@if(Auth::user()->role == "super_admin")
-Dashboard Super Admin
-@elseif(Auth::user()->role == "admin")
 Dashboard Admin Perusahaan
-@endif
 @endsection
 
 @section('content')

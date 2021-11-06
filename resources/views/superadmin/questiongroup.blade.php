@@ -16,7 +16,10 @@ Data Survey Question Group
             <label for="institution">Select Institution</label>
             <select class="form-control" id="institution" name="institution_id" onchange="window.location.href='/super-admin/question-group/' + this.value">
                 <option disabled selected>Institution/Company</option>
-                @foreach ($institution as $institut)                    
+                @foreach ($institution as $institut)         
+                    @if(Auth::user()->role != "super_admin" && Auth::user()->institution_id != $institut->id)
+                        @continue
+                    @endif
                     <option id="institution_id" value="{{ $institut->id }}" @if(!empty($institution_id) && $institution_id == $institut->id) selected @endif>{{ $institut->institution_name }}</option>
                 @endforeach                                
             </select>

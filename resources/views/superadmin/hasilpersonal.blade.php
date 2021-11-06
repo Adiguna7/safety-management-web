@@ -9,12 +9,16 @@ Hasil Personal
     <div class="col-lg-6">        
         <div class="form-group">
             <label for="institution">Select User</label>
-            <select class="form-control" id="user" name="user_id" onchange="window.location.href=''">
+            <select class="form-control" id="user" name="user_id" onchange="window.location.href='/super-admin/hasil/personal/' + this.value">
+                <option disabled selected>Nama User</option>
                 @foreach ($users as $user)                    
                     @if($user->id == Auth::user()->id)
                         @continue
                     @endif                    
-                    <option value="{{ $user->id }}" @if(isset($userbyid)) selected @endif>{{ $user->name }}</option>
+                    @if(Auth::user()->role != "super_admin" && Auth::user()->institution_id != $user->institution_id)
+                        @continue
+                    @endif
+                    <option value="{{ $user->id }}" @if(!empty($userbyid) && $userbyid->id == $user->id) selected @endif>{{ $user->name }}</option>                    
                 @endforeach                                
             </select>
         </div>        
