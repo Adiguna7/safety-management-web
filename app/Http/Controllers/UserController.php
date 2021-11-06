@@ -22,12 +22,17 @@ class UserController extends Controller
                             ->inRandomOrder()
                             ->get();        
 
+        if($survey_question->isEmpty()){
+            $message = 'Soal survey untuk anda belum siap';
+            return redirect('/user/dashboard')->with(['error' => $message]);
+        }
+
         $survey_question = $survey_question->toArray();
         $options = [1, 2, 3, 4, 5];
         shuffle($options);
 
         // var_dump($options);
-
+        
         return view('user.survey', ['survey_question' => $survey_question, 'user' => $user, 'options' => $options]);
     }
 

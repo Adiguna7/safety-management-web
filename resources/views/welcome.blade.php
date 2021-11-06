@@ -37,6 +37,12 @@
             .top-right {
                 position: absolute;
                 right: 10px;
+                top: 28px;
+            }
+
+            .top-left {
+                position: absolute;
+                left: 10px;
                 top: 18px;
             }
 
@@ -61,11 +67,19 @@
             .m-b-md {
                 margin-bottom: 30px;
             }
+
+            .img{
+                height: 50px;
+            }
         </style>
     </head>
     <body>
         <div class="flex-center position-ref full-height">
-            @if (Route::has('login'))
+            @if (Route::has('login'))        
+                <div class="top-left">
+                    <img class="img" src="{{ asset('img/logoits.png') }}" alt="" srcset="">
+                    <img class="img" src="{{ asset('img/logoindustri.png') }}" alt="" srcset="">
+                </div>        
                 <div class="top-right links">
                     @auth
                         <a href="{{ url('/home') }}">Home</a>

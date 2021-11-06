@@ -32,8 +32,8 @@ Route::post('/survey/submit', 'UserController@submit')->middleware('auth', 'user
 Route::get('/user/dashboard', 'UserController@dashboard')->middleware('auth', 'user');
 Route::get('/survey/hasil/personal', 'UserController@hasilPersonal')->middleware('auth', 'user');
 Route::get('/survey/hasil/getpersonal', 'UserController@getHasilPersonal')->middleware('auth', 'user');
-Route::get('/survey/hasil/institusi', 'UserController@hasilInstitusi')->middleware('auth', 'user');
-Route::get('/survey/hasil/getinstitusi', 'UserController@getHasilInstitusi')->middleware('auth', 'user');
+Route::get('/survey/hasil/institusi', 'UserController@hasilInstitusi')->middleware('auth', 'userperusahaan');
+Route::get('/survey/hasil/getinstitusi', 'UserController@getHasilInstitusi')->middleware('auth', 'userperusahaan');
 
 Route::get('/survey/solusi', 'UserController@solusi')->middleware('auth', 'user');
 Route::post('/survey/solusi/save', 'UserController@solusiSave')->middleware('auth', 'user');

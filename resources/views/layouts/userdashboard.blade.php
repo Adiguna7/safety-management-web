@@ -78,12 +78,14 @@
         </a>        
       </li>
 
+      @if(Auth::user()->role == "user_perusahaan")
       <li class="nav-item">
         <a class="nav-link collapsed" href="/survey/hasil/institusi">
           <i class="fas fa-fw fa-users"></i>
           <span>Hasil Group</span>
         </a>        
       </li>
+      @endif
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="/survey/solusi">

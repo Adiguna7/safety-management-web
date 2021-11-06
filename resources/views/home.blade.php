@@ -24,7 +24,8 @@
                     <button class="text-white btn btn-info" onclick="window.location.href='admin/dashboard'">Go to Dashboard</button>
                     @elseif(Auth::user()->role == "user_perusahaan")
                     <button class="text-white btn btn-info" onclick="window.location.href='user/dashboard'">Go to Dashboard</button>
-                    {{-- @elseif(Auth::user()->role == "user") --}}
+                    @elseif(Auth::user()->role == "user")
+                    <button class="text-white btn btn-info" onclick="window.location.href='user/dashboard'">Go to Dashboard</button>
                     @endif
                 </div>
             </div>
