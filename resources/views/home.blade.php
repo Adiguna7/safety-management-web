@@ -21,7 +21,7 @@
                     @if(Auth::user()->role == "super_admin")
                     <button class="text-white btn btn-info" onclick="window.location.href='super-admin/dashboard'">Go to Dashboard</button>
                     @elseif(Auth::user()->role == "admin")
-                    <button class="text-white btn btn-info" onclick="window.location.href='admin/dashboard'">Go to Dashboard</button>
+                    <button class="text-white btn btn-info" onclick="window.location.href='super-admin/dashboard'">Go to Dashboard</button>
                     @elseif(Auth::user()->role == "user_perusahaan")
                     <button class="text-white btn btn-info" onclick="window.location.href='user/dashboard'">Go to Dashboard</button>
                     @elseif(Auth::user()->role == "user")

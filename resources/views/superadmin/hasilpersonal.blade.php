@@ -18,7 +18,7 @@ Hasil Personal
                     @if(Auth::user()->role != "super_admin" && Auth::user()->institution_id != $user->institution_id)
                         @continue
                     @endif
-                    <option value="{{ $user->id }}" @if(!empty($userbyid) && $userbyid->id == $user->id) selected @endif>{{ $user->name }}</option>                    
+                    <option value="{{ $user->id }}" @if(!empty($userbyid) && $userbyid->id == $user->id) selected @endif>{{ $user->name . " - " . $user->institution}}</option>                    
                 @endforeach                                
             </select>
         </div>        

@@ -83,7 +83,7 @@
       <li class="nav-item">
         <a class="nav-link collapsed" href="/super-admin/hasil/institusi">
           <i class="fas fa-fw fa-users"></i>
-          <span>Hasil Group</span>
+          <span>Hasil Perusahaan</span>
         </a>        
       </li>
 
@@ -91,7 +91,7 @@
       <li class="nav-item">
         <a class="nav-link collapsed" href="/super-admin/solusi">
           <i class="fas fa-fw fa-lightbulb"></i>
-          <span>Data Solusi</span>
+          <span>Edit Alt Solusi</span>
         </a>        
       </li>         
       @endif
@@ -100,7 +100,7 @@
       <li class="nav-item">
         <a class="nav-link collapsed" href="/super-admin/question">
           <i class="fas fa-fw fa-question"></i>
-          <span>Data Question</span>
+          <span>Edit Bank Soal</span>
         </a>        
       </li> 
       @endif
@@ -108,7 +108,7 @@
       <li class="nav-item">
         <a class="nav-link collapsed" href="/super-admin/question-group">
           <i class="fas fa-fw fa-pager"></i>
-          <span>Data GroupQ</span>
+          <span>Edit Soal Perusahaan</span>
         </a>        
       </li> 
       
@@ -116,7 +116,7 @@
       <li class="nav-item">
         <a class="nav-link collapsed" href="/super-admin/category-question">
           <i class="fas fa-fw fa-layer-group"></i>
-          <span>Data CategoryQ</span>
+          <span>Edit Category</span>
         </a>        
       </li>     
       @endif
@@ -124,7 +124,7 @@
       <li class="nav-item">
         <a class="nav-link collapsed" href="/super-admin/users">
           <i class="fas fa-user-shield"></i>
-          <span>Data Users</span>
+          <span>Edit Account Users</span>
         </a>        
       </li>
 
@@ -132,7 +132,7 @@
       <li class="nav-item">
         <a class="nav-link collapsed" href="/super-admin/institution">
           <i class="fas fa-fw fa-building"></i>
-          <span>Data Institusi</span>
+          <span>Edit Perusahaan</span>
         </a>        
       </li>
       @endif

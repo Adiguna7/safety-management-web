@@ -91,7 +91,7 @@ Route::post('/super-admin/question-group/update', 'AdminController@updateQuestio
 Route::post('/super-admin/question-group/delete', 'AdminController@deleteQuestionGroup')->middleware('auth', 'admin');
 
 // ROUTE ADMIN PERUSAHAAN
-Route::get('/admin/dashboard', 'AdminController@indexAdminPerusahaan')->middleware('auth', 'admin');
+// Route::get('/admin/dashboard', 'AdminController@indexAdminPerusahaan')->middleware('auth', 'admin');
 // Route::get('/super-admin/hasil/institusi', 'AdminController@indexInstitusi')->middleware('auth', 'superadmin');
 // Route::get('/super-admin/hasil/institusi/{institution_id}', 'AdminController@institusiById')->middleware('auth', 'superadmin');
 // Route::get('/super-admin/hasil/getinstitusi/{institution_id}', 'AdminController@getInstitusi')->middleware('auth', 'superadmin');

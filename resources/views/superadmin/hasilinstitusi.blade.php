@@ -12,6 +12,10 @@ Hasil Institusi
             <select class="form-control" id="institution" name="institution_id">
                 <option selected disabled>Nama Institusi / Company</option>
                 @foreach ($institution as $institut)
+                    @if(Auth::user()->role != "super_admin" && Auth::user()->institution_id != $institut->id){
+                        @continue
+                    }
+                    @endif
                     <option value="{{ $institut->id }}" @if(!empty($institutionbyid->id) && $institutionbyid->id == $institut->id) selected @endif>{{ $institut->institution_name }}</option>
                 @endforeach                                
             </select>
@@ -27,7 +31,7 @@ Hasil Institusi
         <div class="card shadow mb-4">            
             <div class="card-body">
                 <h5 class="card-title font-weight-bold">Nama Institusi: {{ $institutionbyid->institution_name }}</h5>                                    
-                @foreach ($survey_institusi_admin as $hasil)
+                @foreach ($survey_institusi_admin as $hasil)                    
                     <p class="card-text">{{ $hasil->dimensi }}<span>: {{ $hasil->rata }}</span></p>
                 @endforeach
             </div>

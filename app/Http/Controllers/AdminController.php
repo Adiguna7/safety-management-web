@@ -43,6 +43,9 @@ class AdminController extends Controller
     }
 
     public function institusiById(Request $request){
+        if(Auth::user()->role != "super_admin" && Auth::user()->institution_id != $request->institution_id){
+            return abort(403);
+        }
         $institution = Institution::all();        
         $institutionbyid = Institution::where('id', $request->institution_id)->get()->first();
         if(empty($institutionbyid)){
