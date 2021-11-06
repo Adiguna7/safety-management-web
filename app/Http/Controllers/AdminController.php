@@ -348,11 +348,19 @@ class AdminController extends Controller
 
                                     'survey_category.nama as category'
                                 )->first();  
+            
+            $surveyGroupNoQuestion = 1;
+
+            $surveyQuestionGroupByIdLatest = SurveyQuestionGroup::latest('no_question')->first();            
+
+            if(!empty($surveyQuestionGroupByIdLatest)){
+                $surveyGroupNoQuestion = $surveyQuestionGroupByIdLatest->no_question + 1;
+            }
 
             SurveyQuestionGroup::create([
                 'dimensi' => $surveyQuestionById->dimensi,
                 'category_id' => $surveyQuestionById->category_id,
-                'no_question' => $surveyQuestionById->no_question,
+                'no_question' => $surveyGroupNoQuestion,
                 'keyword' => $surveyQuestionById->keyword,
                 'text_question' => $surveyQuestionById->text_question,
                 'option_1' => $surveyQuestionById->option_1,

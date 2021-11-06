@@ -20,6 +20,9 @@ class User
         if(!$user->is_admin && $user->role == "user"){            
             return $next($request);
         }        
+        else if(!$user->is_admin && $user->role == "user_perusahaan"){            
+            return $next($request);
+        }        
         return abort(403);        
     }
 }

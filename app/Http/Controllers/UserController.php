@@ -11,12 +11,16 @@ use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 use App\Solutions;
 use App\SolutionsAnswers;
+use App\SurveyQuestionGroup;
 
 class UserController extends Controller
 {
     public function index(){
-        $survey_question = SurveyQuestion::inRandomOrder()->get();
+        // $survey_question = SurveyQuestion::inRandomOrder()->get();        
         $user = Auth::user();        
+        $survey_question = SurveyQuestionGroup::where('institution_id', $user->institution_id)
+                            ->inRandomOrder()
+                            ->get();        
 
         $survey_question = $survey_question->toArray();
         $options = [1, 2, 3, 4, 5];
@@ -32,35 +36,34 @@ class UserController extends Controller
         $data_institution = Institution::where('id', $user->institution_id)->get()->first();
         $allinput = $request->all();
 
-        if($data_institution !== null){
-            if($data_institution->response >= $data_institution->max_response){
-                $message = 'Max response sudah terpenuhi, tidak menerima response kembali';
-                return redirect('/user/dashboard')->with(['error' => $message]);
-            }
-            else{
-                $check_survey = SurveyResponse::where('user_id', $user->id)->get()->first();
-                if(isset($check_survey) && $check_survey !== null){
-                    SurveyResponse::where('user_id', $user->id)->delete();
-                }
-                
-                $last_no_question = SurveyQuestion::latest('no_question')->first();
-                for($i = 1; $i <= $last_no_question->no_question; $i++){
-                    SurveyResponse::create([
-                        'user_id' => $user->id,
-                        'question_id' => $allinput['questionid'.$i],
-                        'institution_id' => $data_institution->id,
-                        'answer' => $allinput['question'.$i]
-                    ]);                    
-                }
-                $message = 'Berhasil mengisi survey';
-                Institution::where('id', $data_institution->id)->update(['response' => ($data_institution->response+1)]);
-                return redirect('/user/dashboard')->with(['success' => $message]);
-            }
-        }
-        else{
+        if(empty($data_institution)){
             $message = 'Institusi tidak terdaftar';
             return redirect('/survey')->with(['error' => $message]);
         }
+        if($data_institution->response >= $data_institution->max_response){
+            $message = 'Max response sudah terpenuhi, tidak menerima response kembali';
+            return redirect('/user/dashboard')->with(['error' => $message]);
+        }            
+
+        $check_survey = SurveyResponse::where('user_id', $user->id)->get()->first();
+        if(isset($check_survey) && $check_survey !== null){
+            SurveyResponse::where('user_id', $user->id)->delete();
+        }
+        
+        $last_no_question = SurveyQuestionGroup::where('institution_id', $user->institution_id)
+                            ->latest('no_question')
+                            ->first();
+        for($i = 1; $i <= $last_no_question->no_question; $i++){
+            SurveyResponse::create([
+                'user_id' => $user->id,
+                'question_id' => $allinput['questionid'.$i],
+                'institution_id' => $data_institution->id,
+                'answer' => $allinput['question'.$i]
+            ]);                    
+        }
+        $message = 'Berhasil mengisi survey';
+        Institution::where('id', $data_institution->id)->update(['response' => ($data_institution->response+1)]);
+        return redirect('/user/dashboard')->with(['success' => $message]);                    
 
     }
 
@@ -73,13 +76,13 @@ class UserController extends Controller
 
     public function hasilPersonal(){
         $user = Auth::user();
-        $hasil_survey = DB::select('SELECT avg(sr.answer) AS rata, sq.dimensi FROM survey_response sr, survey_question sq WHERE sr.question_id = sq.id AND sr.user_id = ? GROUP BY sq.dimensi ORDER BY sq.dimensi = ? DESC, rata DESC', [$user->id, 'risk']);
+        $hasil_survey = DB::select('SELECT avg(sr.answer) AS rata, sq.dimensi FROM survey_response sr, survey_group_question sq WHERE sr.question_id = sq.id AND sr.user_id = ? GROUP BY sq.dimensi ORDER BY sq.dimensi = ? DESC, rata DESC', [$user->id, 'risk']);                
         return view('user.hasilpersonal', ['hasil_survey' => $hasil_survey, 'user' => $user]);
     }
 
     public function getHasilPersonal(){
         $user = Auth::user();
-        $hasil_survey = DB::select('SELECT avg(sr.answer) AS rata, sq.dimensi FROM survey_response sr, survey_question sq WHERE sr.question_id = sq.id AND sr.user_id = ? AND sq.dimensi <> ? GROUP BY sq.dimensi ORDER BY rata DESC', [$user->id, 'risk']);
+        $hasil_survey = DB::select('SELECT avg(sr.answer) AS rata, sq.dimensi FROM survey_response sr, survey_group_question sq WHERE sr.question_id = sq.id AND sr.user_id = ? AND sq.dimensi <> ? GROUP BY sq.dimensi ORDER BY rata DESC', [$user->id, 'risk']);
         return response()->json(['hasil_survey' => $hasil_survey] , Response::HTTP_OK);  
     }
 
@@ -87,7 +90,7 @@ class UserController extends Controller
         $user = Auth::user();
         $data_institution = Institution::where('id', $user->institution_id)->get()->first();
         
-        $hasil_survey_institusi = DB::select('SELECT avg(sr.answer) AS rata, sq.dimensi FROM survey_response sr, survey_question sq WHERE sr.question_id = sq.id AND sr.institution_id = ? GROUP BY sq.dimensi ORDER BY sq.dimensi = ? DESC, rata DESC', [$data_institution->id, 'risk']);
+        $hasil_survey_institusi = DB::select('SELECT avg(sr.answer) AS rata, sq.dimensi FROM survey_response sr, survey_group_question sq WHERE sr.question_id = sq.id AND sr.institution_id = ? GROUP BY sq.dimensi ORDER BY sq.dimensi = ? DESC, rata DESC', [$data_institution->id, 'risk']);
         return view('user.hasilinstitusi', ["hasil_survey_institusi" => $hasil_survey_institusi, "data_institution" => $data_institution]);        
     }
 
@@ -95,7 +98,7 @@ class UserController extends Controller
         $user = Auth::user();
         $data_institution = Institution::where('id', $user->institution_id)->get()->first();
         
-        $hasil_survey_institusi = DB::select('SELECT avg(sr.answer) AS rata, sq.dimensi FROM survey_response sr, survey_question sq WHERE sr.question_id = sq.id AND sr.institution_id = ? AND sq.dimensi <> ? GROUP BY sq.dimensi ORDER BY rata DESC', [$data_institution->id, 'risk']);
+        $hasil_survey_institusi = DB::select('SELECT avg(sr.answer) AS rata, sq.dimensi FROM survey_response sr, survey_group_question sq WHERE sr.question_id = sq.id AND sr.institution_id = ? AND sq.dimensi <> ? GROUP BY sq.dimensi ORDER BY rata DESC', [$data_institution->id, 'risk']);
         return response()->json(['hasil_survey_institusi' => $hasil_survey_institusi] , Response::HTTP_OK);  
     }
 

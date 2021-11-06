@@ -37,7 +37,7 @@ class LoginController extends Controller
             return '/admin/dashboard';
         }
         else if(!$user->is_admin && $user->role == "user_perusahaan"){
-            return '/user-perusahaan/dashboard';
+            return '/user/dashboard';
         }
         return '/user/dashboard';
     }

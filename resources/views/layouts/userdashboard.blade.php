@@ -32,14 +32,24 @@
   <div id="wrapper">
 
     <!-- Sidebar -->
+    @if(Auth::user()->role == "user_perusahaan")
+    <ul class="navbar-nav bg-gradient-secondary sidebar sidebar-dark accordion" id="accordionSidebar">
+    @elseif(Auth::user()->role == "user")
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+    @endif
 
       <!-- Sidebar - Brand -->
       <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
         <div class="sidebar-brand-icon rotate-n-15">
           <i class="fas fa-hard-hat"></i>
         </div>
-        <div class="sidebar-brand-text mx-3">Management Safety</div>
+        <div class="sidebar-brand-text mx-3">
+          @if(Auth::user()->role == "user_perusahaan")          
+          User Perusahaan
+          @elseif(Auth::user()->role == "user")
+          User Umum
+          @endif
+        </div>
       </a>
 
       <!-- Divider -->
@@ -139,7 +149,7 @@
 
         <!-- Begin Page Content -->
         <div class="container-fluid" style="min-height: 100vh">
-
+          @include('layouts.messages')
           <!-- Page Heading -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">@yield('header')</h1>            

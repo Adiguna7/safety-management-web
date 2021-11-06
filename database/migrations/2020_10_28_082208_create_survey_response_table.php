@@ -23,7 +23,8 @@ class CreateSurveyResponseTable extends Migration
 
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('institution_id')->references('id')->on('institution');
-            $table->foreign('question_id')->references('id')->on('survey_question');
+            // $table->foreign('question_id')->references('id')->on('survey_question');
+            $table->foreign('question_id')->references('id')->on('survey_group_question');
         });
     }
 
