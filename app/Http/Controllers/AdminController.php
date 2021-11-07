@@ -71,7 +71,18 @@ class AdminController extends Controller
     }
 
     public function personalById(Request $request){
-        $users = User::all();        
+        $users = User::join('institution', 'institution.id', 'users.institution_id')
+                ->select(
+                    'users.id',
+                    'users.name',
+                    'users.email',
+                    'users.role',
+                    'users.is_admin',
+                    'users.institution_id',
+
+                    'institution.institution_name as institution'
+                )
+                ->get(); 
         $userbyid = User::where('id', $request->user_id)->get()->first();
         if(Auth::user()->id == $request->user_id){
             return abort(403);

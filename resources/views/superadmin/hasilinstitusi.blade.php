@@ -31,9 +31,22 @@ Hasil Institusi
         <div class="card shadow mb-4">            
             <div class="card-body">
                 <h5 class="card-title font-weight-bold">Nama Institusi: {{ $institutionbyid->institution_name }}</h5>                                    
-                @foreach ($survey_institusi_admin as $hasil)                    
-                    <p class="card-text">{{ $hasil->dimensi }}<span>: {{ $hasil->rata }}</span></p>
-                @endforeach
+                <table class="table">
+                    <thead>                    
+                      <tr>
+                        <th scope="col">Dimensi</th>
+                        <th scope="col">Score</th>                        
+                      </tr>                    
+                    </thead>
+                    <tbody>
+                    @foreach ($survey_institusi_admin as $hasil)       
+                      <tr>
+                        <th scope="row">{{strtoupper($hasil->dimensi)}}</th>
+                        <td>{{$hasil->rata}}</td>                        
+                      </tr>
+                    @endforeach                      
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
