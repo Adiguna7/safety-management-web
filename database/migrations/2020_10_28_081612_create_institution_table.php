@@ -17,7 +17,7 @@ class CreateInstitutionTable extends Migration
             $table->id();
             $table->string('institution_name');
             $table->enum('category', ['institution', 'company', 'umum', 'expert']);
-            $table->string('institution_code')->nullable();
+            $table->string('institution_code')->unique();
             $table->string('response')->default(0);
             $table->string('max_response');
             $table->timestamps();
