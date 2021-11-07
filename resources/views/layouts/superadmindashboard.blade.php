@@ -136,6 +136,13 @@
         </a>        
       </li>
       @endif
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="/super-admin/pembobotan">
+          <i class="fas fa-fw fa-star"></i>
+          <span>Edit Pembobotan Nilai</span>
+        </a>        
+      </li>
             
 
       <!-- Divider -->

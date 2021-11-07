@@ -8,12 +8,15 @@ use App\Solutions;
 use App\SurveyQuestion;
 use App\SurveyQuestionGroup;
 use App\SurveyCategory;
+use App\Pembobotan;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use PDO;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Log;
+
+use function PHPSTORM_META\map;
 
 class AdminController extends Controller
 {
@@ -534,19 +537,34 @@ class AdminController extends Controller
     }
 
     public function createInstitution(Request $request){
-        if($request->category == "expert"){
-            $institutionParentById = Institution::where('id', $request->parent_id)->first();
-            if(empty($institutionParentById)){    
-                $error = "Institusi / Perusahaan parent tidak ditemukan";
-                return redirect('/super-admin/institution')->with(["error" => $error]);
+        $createPembobotan = false;
+        try {   
+            if($request->category == "expert"){
+                $institutionParentById = Institution::where('id', $request->parent_id)->first();
+                if(empty($institutionParentById)){    
+                    $error = "Institusi / Perusahaan parent tidak ditemukan";
+                    return redirect('/super-admin/institution')->with(["error" => $error]);
+                }
+                if($institutionParentById->category == "expert" || $institutionParentById->category == "umum"){
+                    $error = "Request tidak bisa dilakukan karena expert tidak disambungkan ke institusi / perusahaan";
+                    return redirect('/super-admin/institution')->with(["error" => $error]);
+                }
+                $institutionChildById = Institution::where('parent_id', $request->parent_id)->first();
+                if(!empty($institutionChildById)){
+                    $error = "Expert tiap institusi/perusahaan hanya ada 1 role";
+                    return redirect('/super-admin/institution')->with(["error" => $error]);
+                }
+                $createPembobotan = true;
+            }                         
+            if($createPembobotan){
+                $pembobotan = Pembobotan::where('institution_id', $request->parent_id)->first();
+                
+                if(empty($pembobotan)){
+                    Pembobotan::create([
+                        'institution_id' => $request->parent_id,                        
+                    ]);
+                }
             }
-            if($institutionParentById->category == "expert" || $institutionParentById->category == "umum"){
-                $error = "Request tidak bisa dilakukan karena expert tidak disambungkan ke institusi / perusahaan";
-                return redirect('/super-admin/institution')->with(["error" => $error]);
-            }
-
-        }        
-        try {
             Institution::create([
                 'institution_name' => $request->institution_name,
                 'institution_code' => $request->institution_code,
@@ -684,4 +702,76 @@ class AdminController extends Controller
         $success = "Berhasil delete data category question";
         return redirect('/super-admin/category-question')->with(['success' => $success]);
     }
+
+    // ==================================== PEMBOBOTAN ====================================
+    public function indexPembobotan(){
+        $pembobotan = Pembobotan::join('institution', 'institution.id', 'pembobotan.institution_id')
+                    ->select(
+                        'pembobotan.id',
+                        'pembobotan.nilai_expert',
+                        'pembobotan.nilai_users',
+                        'pembobotan.institution_id',
+
+                        'institution.institution_name as institution'
+                    )
+                    ->get();
+        $institutions = Institution::all();
+
+        return view('superadmin.pembobotan', ['pembobotan' => $pembobotan, 'institutions' => $institutions]);
+    }
+
+    // public function createInstitution(Request $request){
+    //     if($request->category == "expert"){
+    //         $institutionParentById = Institution::where('id', $request->parent_id)->first();
+    //         if(empty($institutionParentById)){    
+    //             $error = "Institusi / Perusahaan parent tidak ditemukan";
+    //             return redirect('/super-admin/institution')->with(["error" => $error]);
+    //         }
+    //         if($institutionParentById->category == "expert" || $institutionParentById->category == "umum"){
+    //             $error = "Request tidak bisa dilakukan karena expert tidak disambungkan ke institusi / perusahaan";
+    //             return redirect('/super-admin/institution')->with(["error" => $error]);
+    //         }
+
+    //     }        
+    //     try {
+    //         Institution::create([
+    //             'institution_name' => $request->institution_name,
+    //             'institution_code' => $request->institution_code,
+    //             'category' => $request->category,
+    //             'max_response' => $request->max_response,
+    //             'parent_id' => $request->parent_id
+    //         ]);
+    //         $success = "Berhasil menambahkan institusi / perusahaan";
+    //         return redirect('/super-admin/institution')->with(["success" => $success]);
+    //     }catch (\Exception $e) {
+    //         return redirect('/super-admin/institution')->with(["error" => $e->getMessage()]);
+    //     }        
+    // }
+
+    public function updatePembobotan(Request $request){        
+        try{
+            $nilai_expert = (int)$request->nilai_expert;
+            $nilai_users = 100 - $nilai_expert;
+
+            Pembobotan::where('id', $request->pembobotan_id)->update([
+                'nilai_expert' => $nilai_expert,                
+                'nilai_users' =>$nilai_users,                
+            ]);
+            $success = "Berhasil update pembobotan institusi / perusahan";
+            return redirect('/super-admin/pembobotan')->with(["success" => $success]);
+        }catch (\Exception $e) {
+            return redirect('/super-admin/pembobotan')->with(["error" => $e->getMessage()]);
+        }        
+    }
+
+    // public function deleteInstitution(Request $request){
+    //     try{
+    //         Institution::where('id', $request->institution_id)->delete();
+    //         $success = "Berhasil delete institusi / perusahaan";
+    //         return redirect('/super-admin/institution')->with(["success" => $success]);
+    //     }       
+    //     catch (\Exception $e) {
+    //         return redirect('/super-admin/institution')->with(["error" => $e->getMessage()]);
+    //     } 
+    // }
 }

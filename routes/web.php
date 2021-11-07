@@ -90,6 +90,11 @@ Route::post('/super-admin/question-group/create', 'AdminController@createQuestio
 Route::post('/super-admin/question-group/update', 'AdminController@updateQuestionGroup')->middleware('auth', 'admin');
 Route::post('/super-admin/question-group/delete', 'AdminController@deleteQuestionGroup')->middleware('auth', 'admin');
 
+Route::get('/super-admin/pembobotan', 'AdminController@indexPembobotan')->middleware('auth', 'admin');
+Route::post('/super-admin/pembobotan/create', 'AdminController@createPembobotan')->middleware('auth', 'admin');
+Route::post('/super-admin/pembobotan/update', 'AdminController@updatePembobotan')->middleware('auth', 'admin');
+Route::post('/super-admin/pembobotan/delete', 'AdminController@deletePembobotan')->middleware('auth', 'admin');
+
 // ROUTE ADMIN PERUSAHAAN
 // Route::get('/admin/dashboard', 'AdminController@indexAdminPerusahaan')->middleware('auth', 'admin');
 // Route::get('/super-admin/hasil/institusi', 'AdminController@indexInstitusi')->middleware('auth', 'superadmin');
