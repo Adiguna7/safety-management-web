@@ -18,6 +18,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/survey/hasil/print-pdf', 'UserController@hasilPersonalFull')->middleware('auth', 'user');
+
 // Route::get('error', function () {
 //     return view('errors.deletedaccount');
 // });
@@ -37,6 +39,7 @@ Route::get('/survey/hasil/getinstitusi', 'UserController@getHasilInstitusi')->mi
 
 Route::get('/survey/solusi', 'UserController@solusi')->middleware('auth', 'user');
 Route::post('/survey/solusi/save', 'UserController@solusiSave')->middleware('auth', 'user');
+Route::post('/survey/solusi/delete', 'UserController@solusiDelete')->middleware('auth', 'user');
 
 
 // ROUTE SUPER-ADMIN

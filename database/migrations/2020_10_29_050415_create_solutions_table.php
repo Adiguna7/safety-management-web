@@ -22,7 +22,7 @@ class CreateSolutionsTable extends Migration
             $table->string('author')->nullable();
             $table->string('link_doi')->nullable();
             $table->string('company_background')->nullable();
-            $table->string('keterangan')->nullable();
+            $table->mediumText('keterangan')->nullable();
             $table->timestamps();
         });
     }

@@ -10,6 +10,7 @@ use App\SurveyQuestionGroup;
 use App\SurveyCategory;
 use App\Pembobotan;
 use App\User;
+use App\Score;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use PDO;
@@ -45,7 +46,7 @@ class AdminController extends Controller
         return view('superadmin.hasilpersonal', ['users' => $users]);
     }
 
-    public function institusiById(Request $request){
+    public function institusiById(Request $request){        
         if(Auth::user()->role != "super_admin" && Auth::user()->institution_id != $request->institution_id){
             return abort(403);
         }
@@ -55,8 +56,15 @@ class AdminController extends Controller
             $error = "Institusi/Company tidak ditemukan";
             return redirect('/super-admin/hasil/institusi')->with(["error" => $error]);
         }
-        $survey_institusi_admin = DB::select('SELECT avg(sr.answer) AS rata, sq.dimensi FROM survey_response sr, survey_question sq WHERE sr.question_id = sq.id AND sr.institution_id = ? GROUP BY sq.dimensi ORDER BY rata DESC', [$request->institution_id]);
-        if(empty($survey_institusi_admin)){
+        // $survey_institusi_admin = DB::select('SELECT avg(sr.answer) AS rata, sq.dimensi FROM survey_response sr, survey_group_question sq WHERE sr.question_id = sq.id AND sr.institution_id = ? GROUP BY sq.dimensi ORDER BY rata DESC', [$request->institution_id]); //code pertama
+        // $survey_institusi_admin = DB::select('SELECT avg(sr.answer) AS rata, sq.dimensi FROM survey_response sr, survey_group_question sq WHERE sr.question_id = sq.id AND sr.institution_id = ? GROUP BY sq.dimensi ORDER BY sq.dimensi = ? DESC, rata DESC', [$request->institution_id, 'risk']); // code kedua
+        $survey_institusi_admin = Score::where('institution_id', $request->institution_id)
+                                ->select(DB::raw('avg(score_angka) as rata'), 'dimensi')                                                                        
+                                ->groupBy('dimensi')
+                                ->orderByRaw("FIELD(dimensi , 'risk') DESC")
+                                ->orderBy('score_angka', 'DESC')
+                                ->get();        
+        if($survey_institusi_admin->isEmpty()){
             $error = "Users institusi/company " . $institutionbyid->institution_name . " belum ada yang mengisi survey";
             return redirect('/super-admin/hasil/institusi')->with(["error" => $error]);
         }
@@ -66,7 +74,14 @@ class AdminController extends Controller
     }
 
     public function getInstitusi(Request $request){                    
-        $hasil_survey_institusi = DB::select('SELECT avg(sr.answer) AS rata, sq.dimensi FROM survey_response sr, survey_question sq WHERE sr.question_id = sq.id AND sr.institution_id = ? AND sq.dimensi <> ? GROUP BY sq.dimensi ORDER BY rata DESC', [$request->institution_id, 'risk']);
+        // $hasil_survey_institusi = DB::select('SELECT avg(sr.answer) AS rata, sq.dimensi FROM survey_response sr, survey_question sq WHERE sr.question_id = sq.id AND sr.institution_id = ? AND sq.dimensi <> ? GROUP BY sq.dimensi ORDER BY rata DESC', [$request->institution_id, 'risk']);
+        $hasil_survey_institusi = Score::where('institution_id', $request->institution_id)
+                                ->where('dimensi', '<>', 'risk')
+                                ->select(DB::raw('avg(score_angka) as rata'), 'dimensi')                                                                        
+                                ->groupBy('dimensi')
+                                ->orderByRaw("FIELD(dimensi , 'risk') DESC")
+                                ->orderBy('score_angka', 'DESC')
+                                ->get();
         return response()->json(['hasil_survey_institusi' => $hasil_survey_institusi] , Response::HTTP_OK);  
     }
 
@@ -94,9 +109,14 @@ class AdminController extends Controller
             $error = "User tidak ditemukan";
             return redirect('/super-admin/hasil/personal')->with(["error" => $error]);
         }
-        $survey_personal_admin = DB::select('SELECT avg(sr.answer) AS rata, sq.dimensi FROM survey_response sr, survey_question sq WHERE sr.question_id = sq.id AND sr.user_id = ? GROUP BY sq.dimensi ORDER BY rata DESC', [$request->user_id]);
+        // $survey_personal_admin = DB::select('SELECT avg(sr.answer) AS rata, sq.dimensi FROM survey_response sr, survey_question sq WHERE sr.question_id = sq.id AND sr.user_id = ? GROUP BY sq.dimensi ORDER BY rata DESC', [$request->user_id]);
+        $survey_personal_admin = Score::where('user_id', $request->user_id)
+                                ->select('score_angka AS rata', 'dimensi')                                                                        
+                                ->orderByRaw("FIELD(dimensi , 'risk') DESC")
+                                ->orderBy('score_angka', 'DESC')
+                                ->get();
 
-        if(empty($survey_personal_admin)){
+        if($survey_personal_admin->isEmpty()){
             $error = "User " . $userbyid->name . " belum mengisi survey";
             return redirect('/super-admin/hasil/personal')->with(["error" => $error]);
         }
@@ -105,7 +125,12 @@ class AdminController extends Controller
         
     }
     public function getPersonal(Request $request){                    
-        $hasil_survey_personal = DB::select('SELECT avg(sr.answer) AS rata, sq.dimensi FROM survey_response sr, survey_question sq WHERE sr.question_id = sq.id AND sr.user_id = ? AND sq.dimensi <> ? GROUP BY sq.dimensi ORDER BY rata DESC', [$request->user_id, 'risk']);
+        // $hasil_survey_personal = DB::select('SELECT avg(sr.answer) AS rata, sq.dimensi FROM survey_response sr, survey_question sq WHERE sr.question_id = sq.id AND sr.user_id = ? AND sq.dimensi <> ? GROUP BY sq.dimensi ORDER BY rata DESC', [$request->user_id, 'risk']);
+        $hasil_survey_personal = Score::where('user_id', $request->user_id)
+                            ->where('dimensi', '<>', 'risk')
+                            ->select('score_angka AS rata', 'dimensi')                                                                        
+                            ->orderBy('score_angka', 'DESC')
+                            ->get();
         return response()->json(['hasil_survey_personal' => $hasil_survey_personal] , Response::HTTP_OK);  
     }
 
@@ -286,7 +311,8 @@ class AdminController extends Controller
                                     'survey_group_question.option_3',
                                     'survey_group_question.option_4',
                                     'survey_group_question.option_5',
-
+                                    
+                                    'survey_group_question.survey_question_id',                                
                                     'survey_category.nama as category',
                                     'survey_group_question.institution_id',
                                     'institution.institution_name as institution'
@@ -374,6 +400,14 @@ class AdminController extends Controller
                 $surveyGroupNoQuestion = $surveyQuestionGroupByIdLatest->no_question + 1;
             }
 
+            $checkExpert = Institution::where('parent_id', $institution_id)
+                                        ->first();
+            
+            if(empty($checkExpert) && $institutionById->category != "umum"){
+                $error = "Expert belum terset, Silahkan set expert untuk " . $institutionById->institution_name . " terlebih dahulu";
+                return response()->json(['error' => $error] , Response::HTTP_OK);  
+            }
+
             SurveyQuestionGroup::create([
                 'dimensi' => $surveyQuestionById->dimensi,
                 'category_id' => $surveyQuestionById->category_id,
@@ -388,6 +422,22 @@ class AdminController extends Controller
                 
                 'survey_question_id' => $survey_question_id,
                 'institution_id' => $institution_id
+            ]);
+
+            SurveyQuestionGroup::create([
+                'dimensi' => $surveyQuestionById->dimensi,
+                'category_id' => $surveyQuestionById->category_id,
+                'no_question' => $surveyGroupNoQuestion,
+                'keyword' => $surveyQuestionById->keyword,
+                'text_question' => $surveyQuestionById->text_question,
+                'option_1' => $surveyQuestionById->option_1,
+                'option_2' => $surveyQuestionById->option_2,
+                'option_3' => $surveyQuestionById->option_3,
+                'option_4' => $surveyQuestionById->option_4,
+                'option_5' => $surveyQuestionById->option_5,
+                
+                'survey_question_id' => $survey_question_id,
+                'institution_id' => $checkExpert->id
             ]);
             
             $success = "Berhasil save import data ke " . $institutionById->institution_name;
@@ -405,9 +455,21 @@ class AdminController extends Controller
         $institution_id = $request->institution_id;
         try {
             $institutionById = Institution::where('id', $institution_id)
-                            ->first();            
+                            ->first(); 
+                            
+            $checkExpert = Institution::where('parent_id', $institution_id)
+            ->first(); 
+
+            if(empty($checkExpert) && $institutionById->category != "umum"){
+                $error = "Expert belum terset, Silahkan set expert untuk " . $institutionById->institution_name . " terlebih dahulu";
+                return response()->json(['error' => $error] , Response::HTTP_OK);  
+            }
 
             SurveyQuestionGroup::where('institution_id', $institution_id)
+                                ->where('survey_question_id', $survey_question_id)
+                                ->delete();
+
+            SurveyQuestionGroup::where('institution_id', $checkExpert->id)
                                 ->where('survey_question_id', $survey_question_id)
                                 ->delete();
             
@@ -427,6 +489,14 @@ class AdminController extends Controller
                             ->first();
 
         try {
+            $checkExpert = Institution::where('parent_id', $institution_id)
+                                        ->first();
+            
+            if(empty($checkExpert) && $institutionById->category != "umum"){
+                $error = "Expert belum terset, Silahkan set expert untuk " . $institutionById->institution_name . " terlebih dahulu";                
+                return redirect('/super-admin/question-group/' . $institution_id)->with(["error" => $error]);
+            }
+
             SurveyQuestionGroup::create([
                 'dimensi' => $request->dimensi,
                 'category_id' => $request->category,
@@ -442,19 +512,7 @@ class AdminController extends Controller
                 'institution_id' => $institution_id
             ]);
 
-            $success = "Berhasil menambah data question untuk group " . $institutionById->institution_name;
-            return redirect('/super-admin/question-group/' . $institution_id)->with(["success" => $success]);
-        }
-        catch(\Exception $e)
-        {            
-            return redirect('/super-admin/question-group/' . $institution_id)->with(["error" => $e->getMessage()]);
-        }
-    }
-
-    public function updateQuestionGroup(Request $request){
-        $institution_id = $request->institution_id;        
-        try {
-            SurveyQuestionGroup::where('id', $request->question_id)->update([
+            SurveyQuestionGroup::create([
                 'dimensi' => $request->dimensi,
                 'category_id' => $request->category,
                 'no_question' => $request->no_question,
@@ -465,7 +523,61 @@ class AdminController extends Controller
                 'option_3' => $request->option_3,
                 'option_4' => $request->option_4,
                 'option_5' => $request->option_5,
+
+                'institution_id' => $checkExpert->id
             ]);
+
+            $success = "Berhasil menambah data question untuk group " . $institutionById->institution_name;
+            return redirect('/super-admin/question-group/' . $institution_id)->with(["success" => $success]);
+        }
+        catch(\Exception $e)
+        {            
+            return redirect('/super-admin/question-group/' . $institution_id)->with(["error" => $e->getMessage()]);
+        }
+    }
+
+    public function updateQuestionGroup(Request $request){
+        $institution_id = $request->institution_id;   
+        $institutionById = Institution::where('id', $institution_id)
+                            ->first();     
+        try {
+            $checkExpert = Institution::where('parent_id', $institution_id)
+                                        ->first();
+            
+            if(empty($checkExpert) && $institutionById->category != "umum"){
+                $error = "Expert belum terset, Silahkan set expert untuk " . $institutionById->institution_name . " terlebih dahulu";                
+                return redirect('/super-admin/question-group/' . $institution_id)->with(["error" => $error]);
+            }            
+
+            SurveyQuestionGroup::where('survey_question_id', $request->question_id)
+                                ->where('institution_id', $institution_id)
+                                ->update([
+                                    'dimensi' => $request->dimensi,
+                                    'category_id' => $request->category,
+                                    'no_question' => $request->no_question,
+                                    'keyword' => $request->keyword,
+                                    'text_question' => $request->text_question,
+                                    'option_1' => $request->option_1,
+                                    'option_2' => $request->option_2,
+                                    'option_3' => $request->option_3,
+                                    'option_4' => $request->option_4,
+                                    'option_5' => $request->option_5,
+                                ]);
+
+            SurveyQuestionGroup::where('survey_question_id', $request->question_id)
+                                ->where('institution_id', $checkExpert->id)
+                                ->update([
+                                    'dimensi' => $request->dimensi,
+                                    'category_id' => $request->category,
+                                    'no_question' => $request->no_question,
+                                    'keyword' => $request->keyword,
+                                    'text_question' => $request->text_question,
+                                    'option_1' => $request->option_1,
+                                    'option_2' => $request->option_2,
+                                    'option_3' => $request->option_3,
+                                    'option_4' => $request->option_4,
+                                    'option_5' => $request->option_5,
+                                ]);
 
             $institutionById = Institution::where('id', $institution_id)->first();
             $success = "Berhasil update data question group " . $institutionById->institution_name;
@@ -480,10 +592,26 @@ class AdminController extends Controller
 
     public function deleteQuestionGroup(Request $request){
         $institution_id = $request->institution_id;
+        $institutionById = Institution::where('id', $institution_id)
+                            ->first();  
 
         try {
+            $checkExpert = Institution::where('parent_id', $institution_id)
+                                        ->first();
+            
+            if(empty($checkExpert) && $institutionById->category != "umum"){
+                $error = "Expert belum terset, Silahkan set expert untuk " . $institutionById->institution_name . " terlebih dahulu";                
+                return redirect('/super-admin/question-group/' . $institution_id)->with(["error" => $error]);
+            }            
 
-            SurveyQuestionGroup::where('id', $request->question_id)->delete();
+            SurveyQuestionGroup::where('survey_question_id', $request->question_id)
+                                ->where('institution_id', $institution_id)
+                                ->delete();
+
+            SurveyQuestionGroup::where('survey_question_id', $request->question_id)
+                                ->where('institution_id', $checkExpert->id)
+                                ->delete();
+
             $institutionById = Institution::where('id', $institution_id)->first();
             $success = "Berhasil delete data question group " . $institutionById->institution_name;
             return redirect('/super-admin/question-group/'.$institution_id)->with(["success" => $success]);

@@ -1,4 +1,4 @@
-@extends('layouts.userdashboard')
+@extends('layouts.userdashboardfull')
 
 @section('header')
 Hasil Survey Personal
@@ -6,7 +6,7 @@ Hasil Survey Personal
 
 @section('content')
 @if(!$hasil_survey->isEmpty())
-<div class="row mt-5">
+<div class="row mt-5 justify-content-center">
     <div class="col-lg-4">
         <!-- Basic Card Example -->
         <div class="card shadow mb-4">                       
@@ -37,7 +37,7 @@ Hasil Survey Personal
             </div>
         </div>
     </div>
-    <div class="col-lg-8">
+    <div class="col-lg-5 d-flex justify-content-center">
         <div id="mynetwork">
             {{-- <img src="{{ asset('img/safetymodel.png') }}" alt="" srcset="" class="img-fluid"> --}}
         </div>

@@ -72,13 +72,24 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $institution = Institution::where('institution_code', $data['institutioncode'])->get('id')->first();
+        $institution = Institution::where('institution_code', $data['institutioncode'])->first();
         // echo $institution;
-
+        // var_dump($institution);
+        
+        if($institution->category == "expert"){
+            return User::create([
+                'name' => $data['name'],
+                'email' => $data['email'],            
+                'institution_id' => $institution->id,
+                'role' => 'user_perusahaan',
+                'password' => Hash::make($data['password']),
+            ]);    
+        }        
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],            
             'institution_id' => $institution->id,
+            'role' => 'user',
             'password' => Hash::make($data['password']),
         ]);
     }

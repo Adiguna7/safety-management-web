@@ -19,7 +19,10 @@ Data Pembobotan Nilai Institusi / Perusahaan
                 </tr>
               </thead>              
               <tbody>
-                @foreach ($pembobotan as $item)                                
+                @foreach ($pembobotan as $item)     
+                @if(\App\Institution::where('id', Auth::user()->institution_id)->first()->category != "super_admin" && Auth::user()->institution_id != $item->institution_id)                           
+                    @continue
+                @endif
                 <tr>
                     <td>{{ $item->id }}</td>
                     <td>{{ $item->institution }}</td>

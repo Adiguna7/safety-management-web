@@ -1,7 +1,6 @@
-async function saveImportDataById(survey_question_id, institution_id) {
+async function saveSolutionById(solution_id) {
     var details = {
-        'survey_question_id': survey_question_id,
-        'institution_id': institution_id,        
+        'solution_id': solution_id,        
         '_token': document.querySelector('meta[name="csrf-token"]').content
     };
     
@@ -15,7 +14,7 @@ async function saveImportDataById(survey_question_id, institution_id) {
 
 
     // Default options are marked with *
-    const response = await fetch("/super-admin/question-group/import/save", {
+    const response = await fetch("/survey/solusi/save", {
         method: 'POST', // *GET, POST, PUT, DELETE, etc.
         mode: 'no-cors', // no-cors, *cors, same-origin
         cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
@@ -32,14 +31,15 @@ async function saveImportDataById(survey_question_id, institution_id) {
 
     if (!response.ok) {
         const message = `An error has occured: ${response.status}`;
-        throw new Error(message);
+        // throw new Error(message);
+        return document.getElementById('AlertErrorJs').innerHTML = new Error(message);
     }
     
     const respjson = await response.json();
     console.log(respjson);
     if(respjson.success){
         document.getElementById('AlertSuccessJs').style.display = "block";
-        document.getElementById('ButtonImport' + survey_question_id).innerHTML = '<button class="btn btn-warning" onclick="cancelImportDataById('+survey_question_id+', '+institution_id+')">Cancel</button>';
+        document.getElementById('ButtonImport' + solution_id).innerHTML = '<button class="btn btn-warning" onclick="deleteSolutionById('+solution_id+')">Cancel</button>';
         return document.getElementById('AlertSuccessJs').innerHTML = respjson.success;
     }
     else if(respjson.error){
@@ -49,10 +49,9 @@ async function saveImportDataById(survey_question_id, institution_id) {
     // return response.json(); // parses JSON response into native JavaScript objects
 }
 
-async function cancelImportDataById(survey_question_id, institution_id) {
+async function deleteSolutionById(solution_id) {
     var details = {
-        'survey_question_id': survey_question_id,
-        'institution_id': institution_id,        
+        'solution_id': solution_id,        
         '_token': document.querySelector('meta[name="csrf-token"]').content
     };
     
@@ -66,7 +65,7 @@ async function cancelImportDataById(survey_question_id, institution_id) {
 
 
     // Default options are marked with *
-    const response = await fetch("/super-admin/question-group/import/cancel", {
+    const response = await fetch("/survey/solusi/delete", {
         method: 'POST', // *GET, POST, PUT, DELETE, etc.
         mode: 'no-cors', // no-cors, *cors, same-origin
         cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
@@ -83,20 +82,20 @@ async function cancelImportDataById(survey_question_id, institution_id) {
 
     if (!response.ok) {
         const message = `An error has occured: ${response.status}`;
-        throw new Error(message);
+        // throw new Error(message);
+        return document.getElementById('AlertErrorJs').innerHTML = new Error(message);
     }
     
     const respjson = await response.json();
     console.log(respjson);
     if(respjson.success){
         document.getElementById('AlertSuccessJs').style.display = "block";
-        document.getElementById('ButtonImport' + survey_question_id).innerHTML = '<button class="btn btn-info" onclick="saveImportDataById('+survey_question_id+', '+institution_id+')">Import</button>';
-        return document.getElementById('AlertSuccessJs').innerHTML = respjson.success;        
+        document.getElementById('ButtonImport' + solution_id).innerHTML = '<button class="btn btn-success" onclick="saveSolutionById('+solution_id+')">Select</button>';
+        return document.getElementById('AlertSuccessJs').innerHTML = respjson.success;
     }
     else if(respjson.error){
         document.getElementById('AlertErrorJs').style.display = "block";
-        return document.getElementById('AlertErrorJs').innerHTML = respjson.error;        
+        return document.getElementById('AlertErrorJs').innerHTML = respjson.error;
     }
     // return response.json(); // parses JSON response into native JavaScript objects
 }
-

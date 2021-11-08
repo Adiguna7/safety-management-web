@@ -13,5 +13,6 @@ class Institution extends Model
     ];
     protected $casts = [
         'id' => 'integer',
+        'category' => 'string'
     ];
 }

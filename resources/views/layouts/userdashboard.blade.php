@@ -7,7 +7,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
-  <meta name="author" content="">
+  <meta name="author" content="Suryo Adiguna - Computer Engineering ITS 2018">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
 
   <title>Safety Management - Dashboard</title>
 
@@ -46,6 +47,9 @@
         <div class="sidebar-brand-text mx-3">
           @if(Auth::user()->role == "user_perusahaan")          
           User Perusahaan
+            @if(\App\Institution::where('id', Auth::user()->institution_id)->first()->category == "expert")
+              (Expert)
+            @endif
           @elseif(Auth::user()->role == "user")
           User Umum
           @endif
@@ -87,12 +91,14 @@
       </li>
       @endif
 
+      @if(\App\Institution::where('id', Auth::user()->institution_id)->first()->category != "expert")
       <li class="nav-item">
         <a class="nav-link collapsed" href="/survey/solusi">
           <i class="fas fa-fw fa-lightbulb"></i>
           <span>Alternatif Solusi</span>
         </a>        
       </li>             
+      @endif
 
       <!-- Divider -->
       <hr class="sidebar-divider d-none d-md-block">
@@ -224,6 +230,10 @@
   <!-- Page level custom scripts -->
   <script src="{{ asset('js/demo/chart-area-demo.js') }}"></script>
   <script src="{{ asset('js/demo/chart-pie-demo.js') }}"></script>
+
+  <script src="{{ asset('vendor/datatables/jquery.dataTables.min.js') }}"></script>
+  <script src="{{ asset('vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
+  <script src="{{ asset('js/indextable.js') }}"></script>
 
 </body>
 

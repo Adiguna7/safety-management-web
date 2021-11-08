@@ -17,10 +17,13 @@ Data Survey Question Group
             <select class="form-control" id="institution" name="institution_id" onchange="window.location.href='/super-admin/question-group/' + this.value">
                 <option disabled selected>Institution/Company</option>
                 @foreach ($institution as $institut)         
+                    @if($institut->category == "expert")
+                        @continue
+                    @endif
                     @if(Auth::user()->role != "super_admin" && Auth::user()->institution_id != $institut->id)
                         @continue
                     @endif
-                    <option id="institution_id" value="{{ $institut->id }}" @if(!empty($institution_id) && $institution_id == $institut->id) selected @endif>{{ $institut->institution_name }}</option>
+                    <option id="institution_id" value="{{ $institut->id }}" @if(!empty($institution_id) && $institution_id == $institut->id) selected @endif>{{ $institut->institution_name . " - " . strtoupper($institut->category)}}</option>
                 @endforeach                                
             </select>
         </div>        
@@ -154,7 +157,7 @@ Data Survey Question Group
                             </div>
                             <form action="/super-admin/question-group/update" method="post">
                                 <input type="hidden" name="institution_id" value="{{ $institution_id }}">
-                                <input type="hidden" name="question_id" value="{{ $item->id }}">
+                                <input type="hidden" name="question_id" value="{{ $item->survey_question_id }}">
                                 @csrf
                                 <div class="modal-body">                    
                                     <div class="form-group">                                                
@@ -221,7 +224,7 @@ Data Survey Question Group
                         </div>
                         <form action="/super-admin/question-group/delete" method="post">
                             <input type="hidden" name="institution_id" value="{{ $institution_id }}">
-                            <input type="hidden" name="question_id" value="{{ $item->id }}">
+                            <input type="hidden" name="question_id" value="{{ $item->survey_question_id }}">
                             @csrf
                             <div class="modal-body">                    
                                 <div>Yakin akan menghapus survey question no {{ $item->no_question }}?</div>                                
